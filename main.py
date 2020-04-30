@@ -1,7 +1,6 @@
 # 網頁主程式
 
 from flask import Flask, render_template, jsonify, request, url_for, redirect
-import sqlite3
 import api
 import sql
 
@@ -22,7 +21,7 @@ def test():
 
 # API
 @app.route('/api/<name>', methods=['POST', 'GET'])
-def api(name=None):
+def localapi(name=None):
     
     if name == 'scores': # 分數
         if request.method == 'POST': # 上傳分數
@@ -108,5 +107,9 @@ def special_exception_handler(error):
 def special_exception_handler(error):
     return 'Bad request', 400
 
+@app.template_filter('acc')
+def acc_format(value):
+    return format(float(value), '.2%')
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=80)
+    app.run(port=80)
