@@ -17,7 +17,7 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    return 'no'
+    return render_template('index copy.html',count=sql.get_count())
 
 # API
 @app.route('/api/<name>', methods=['POST', 'GET'])
