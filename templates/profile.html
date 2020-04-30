@@ -28,8 +28,7 @@
                 <td>{{score['beatmap_id']}}</td>
                 <td><img src="{{url_for('static',filename='images/badges/score-ranks-v2019/')}}{{score['rank']}}.svg"></td>
                 <td>{{score['score']}}</td>
-                <td>{{ score['accuracy'] | acc }}</td>
-                <td>{{user['username']}}</td>
+                <td>{{score['accuracy'] | acc}}</td>
                 <td>{{score['maxcombo']}}</td>
                 <td>{{score['count300']}}</td>
                 <td>{{score['count100']}}</td>
