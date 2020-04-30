@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    </head>
+    <body>
+        <img src="https://a.ppy.sh/{{user['user_id']}}" width=128 height=128>
+        <h1>{{user['username']}}</h1>
+        
+        <h4>遊玩紀錄</h4>
+        <table style="border:3px #cccccc solid;" cellpadding="10" border='1'>
+            <tr>
+                <th>map_id</th>
+                <th>rank</th>
+                <th>score</th>
+                <th>acc</th>
+                <th>player</th>
+                <th>max combo</th>
+                <th>300</th>
+                <th>100</th>
+                <th>50</th>
+                <th>miss</th>
+                <th>mods</th>
+                <th>date</th>
+            </tr>
+             {% for score in scores %}
+            <tr>
+                <td>{{score['beatmap_id']}}</td>
+                <td><img src="{{url_for('static',filename='images/badges/score-ranks-v2019/')}}{{score['rank']}}.svg"></td>
+                <td>{{score['score']}}</td>
+                <td>{{score['accuracy']}}</td>
+                <td>{{user['username']}}</td>
+                <td>{{score['maxcombo']}}</td>
+                <td>{{score['count300']}}</td>
+                <td>{{score['count100']}}</td>
+                <td>{{score['count50']}}</td>
+                <td>{{score['countmiss']}}</td>
+                <td>{{score['enabled_mods']}}</td>
+                <td>{{score['date']}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
