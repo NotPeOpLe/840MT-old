@@ -5,7 +5,7 @@ import config
 urlv1 = "https://osu.ppy.sh/api/"
 urlv2 = "https://osu.ppy.sh/api/v2/"
 CLIENT_ID = config.CLIENT_ID
-CLIENT_SCERET = config.CLIENT_SCERET
+CLIENT_SCERET = config.CLIENT_SECRET
 REDIRECT_URL = config.REDIRECT_URL
 
 def authorize(state, scope):
