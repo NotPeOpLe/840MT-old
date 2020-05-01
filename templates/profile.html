@@ -1,13 +1,25 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    </head>
-    <body>
-        <img src="https://a.ppy.sh/{{ user['user_id'] }}" width=128 height=128>
+{% extends "base.html" %}
+{% block title %}{{ user['user_id'] }}的個人頁面{% endblock %}
+{% block content %}
+<section class="hero-wrap img" style="background-image: url(images/bg_3.jpg); height: 300px;">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                <div class="text">
+                    <h1>avs</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section pb-0">
+    <div class="container">
+        <img src="https://a.ppy.sh/{{ user['user_id'] }}" class="rounded img-fluid" width=128 height=128>
         <h1>{{ user['username'] }}</h1>
-        
-        <h4>遊玩紀錄</h4>
+                
+        <h4>遊玩紀錄</h4>aaaa
         <table style="border:3px #cccccc solid;" cellpadding="10" border='1'>
             <tr>
                 <th>map_id</th>
@@ -22,7 +34,7 @@
                 <th>mods</th>
                 <th>date</th>
             </tr>
-             {% for score in scores %}
+            {% for score in scores %}
             <tr>
                 <td>{{ score['beatmap_id'] }}</td>
                 <td><img src="{{ url_for('static',filename='images/badges/score-ranks-v2019/') }}{{ score['rank'] }}.svg"></td>
@@ -38,5 +50,6 @@
             </tr>
             {% endfor %}
         </table>
-    </body>
-</html>
+    </div>
+</section>
+{% endblock %}
