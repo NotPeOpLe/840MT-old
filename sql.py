@@ -44,6 +44,7 @@ def get_user_old(user_id=0):
     for d in sql_data:
         data['user_id'] = d[0]
         data['username'] = d[1]
+        data['country'] = d[2]
     return data
 
 def get_scores(user_id=0,username=''):

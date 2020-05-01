@@ -7,11 +7,25 @@
 
 <section class="ftco-section pb-0">
     <div class="container">
-        <img src="https://a.ppy.sh/{{ user['user_id'] }}" class="rounded img-fluid" width=128 height=128>
-        <h1>{{ user['username'] }}</h1>
-                
-        <h4>遊玩紀錄</h4>aaaa
-        <table style="border:3px #cccccc solid;" cellpadding="10" border='1'>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="https://a.ppy.sh/{{ user['user_id'] }}" class="rounded img-fluid" width=160>
+                    </div>
+                    <div class="text-left">
+                        <h1>{{ user['username'] }}</h1>
+                        <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country'] }}.png" width=24>  {{ user['country'] }}
+                        <p>自我介紹</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3>遊玩紀錄</h3>
+        <table class="table table-sm table-hover">
             <tr>
                 <th>map_id</th>
                 <th>rank</th>
