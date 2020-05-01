@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}{{ user['user_id'] }}的個人頁面{% endblock %}
+{% block title %}{{ user['username'] }}的個人頁面{% endblock %}
 {% block content %}
 <section class="hero-wrap img" style="background-image: url(images/bg_3.jpg); height: 300px;">
     <div class="overlay"></div>
 </section>
 
-<section class="ftco-section pb-0">
+<section class="ftco-section">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -16,44 +16,50 @@
                     <div class="text-left">
                         <h1>{{ user['username'] }}</h1>
                         <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country'] }}.png" width=24>  {{ user['country'] }}
-                        <p>自我介紹</p>
+                        <p>自我介紹(未來功能，下次測試將實現)</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
+<section class="ftco-section bg-light">
     <div class="container">
         <h3>遊玩紀錄</h3>
-        <table class="table table-sm table-hover">
-            <tr>
-                <th>map_id</th>
-                <th>rank</th>
-                <th>score</th>
-                <th>acc</th>
-                <th>max combo</th>
-                <th>300</th>
-                <th>100</th>
-                <th>50</th>
-                <th>miss</th>
-                <th>mods</th>
-                <th>date</th>
-            </tr>
-            {% for score in scores %}
-            <tr>
-                <td>{{ score['beatmap_id'] }}</td>
-                <td><img src="{{ url_for('static',filename='images/badges/score-ranks-v2019/') }}{{ score['rank'] }}.svg"></td>
-                <td>{{ score['score'] }}</td>
-                <td>{{ score['accuracy'] | acc }}</td>
-                <td>{{ score['maxcombo'] }}</td>
-                <td>{{ score['count300'] }}</td>
-                <td>{{ score['count100'] }}</td>
-                <td>{{ score['count50'] }}</td>
-                <td>{{ score['countmiss'] }}</td>
-                <td>{{ score['enabled_mods'] }}</td>
-                <td>{{ score['date'] }}</td>
-            </tr>
-            {% endfor %}
+        <table class="table table-sm table-responsive-md table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>map_id</th>
+                    <th>rank</th>
+                    <th>score</th>
+                    <th>acc</th>
+                    <th>max combo</th>
+                    <th>300</th>
+                    <th>100</th>
+                    <th>50</th>
+                    <th>miss</th>
+                    <th>mods</th>
+                    <th>date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in scores %}
+                <tr>
+                    <td>{{ score['beatmap_id'] }}</td>
+                    <td><img src="{{ url_for('static',filename='images/badges/score-ranks-v2019/') }}{{ score['rank'] }}.svg"></td>
+                    <td>{{ score['score'] }}</td>
+                    <td>{{ score['accuracy'] | acc }}</td>
+                    <td>{{ score['maxcombo'] }}</td>
+                    <td>{{ score['count300'] }}</td>
+                    <td>{{ score['count100'] }}</td>
+                    <td>{{ score['count50'] }}</td>
+                    <td>{{ score['countmiss'] }}</td>
+                    <td>{{ score['enabled_mods'] }}</td>
+                    <td>{{ score['date'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 </section>
