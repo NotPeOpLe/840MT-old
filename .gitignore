@@ -125,3 +125,4 @@ dmypy.json
 .pyre/
 config.py
 map.txt
+data.db
