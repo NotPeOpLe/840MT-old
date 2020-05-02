@@ -9,25 +9,23 @@ conn = sqlite3.connect("data.db", check_same_thread=False)
 c = conn.cursor()
 
 def get_count():
-    sql = c.execute("SELECT * FROM sqlite_sequence")
     data = {}
-    for d in sql:
+    sql_data = c.execute("SELECT * FROM sqlite_sequence")
+    for d in sql_data:
         data[d[0]] = d[1]
     return data
     
 def get_beatmaps_list():
     beatmap_list = []
-    maps = c.execute("SELECT beatmap_id FROM beatmaps")
-    conn.commit()
-    for bid in maps:
+    sql_data = c.execute("SELECT beatmap_id FROM beatmaps")
+    for bid in sql_data:
         beatmap_list.append(int(bid[0]))
     return beatmap_list
 
 def get_all_users_id():
-    users = c.execute("SELECT user_id FROM users")
-    conn.commit()
+    sql_data = c.execute("SELECT user_id FROM users")
     user_list = []
-    for uid in users:
+    for uid in sql_data:
         user_list.append(uid[0])
     return user_list
 
@@ -50,11 +48,11 @@ def get_user_old(user_id=0):
 def get_scores(user_id=0,username=''):
     data = []
     if user_id == -1:
-        scores = c.execute(f"SELECT * FROM scores")
+        sql_data = c.execute(f"SELECT * FROM scores")
     else:
-        scores = c.execute(f"SELECT * FROM scores WHERE user_id={user_id}")
+        sql_data = c.execute(f"SELECT * FROM scores WHERE user_id={user_id}")
 
-    for s in scores:
+    for s in sql_data:
         d = {
             "beatmap_id": s[0],
             "score": s[1],
@@ -72,6 +70,29 @@ def get_scores(user_id=0,username=''):
             "rank": s[13],
             "accuracy": s[14],
             "id": s[15],
+        }
+        data.append(d)
+    return data
+
+def get_ranking():
+    data = []
+    sql_data = c.execute('''SELECT A.*, B.rank_score, B.SS, B.S, B.A
+                    FROM ranking_statistics1 A
+                    LEFT JOIN ranking_statistics2 B
+                    ON A.user_id = B.user_id
+                    ORDER BY B.rank_score DESC''')
+    for s in sql_data:
+        d = {
+            "user_id": s[0],
+            "username": s[1],
+            "country": s[2],
+            "play_count": s[3],
+            "accuracy": s[4],
+            "total_score": s[5],
+            "rank_score": s[6],
+            "SS": s[7],
+            "S": s[8],
+            "A": s[9]
         }
         data.append(d)
     return data
