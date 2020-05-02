@@ -17,7 +17,7 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    return render_template('index copy.html',count=sql.get_count())
+    return jsonify(sql.get_ranking())
 
 # API
 @app.route('/api/<name>', methods=['POST', 'GET'])
