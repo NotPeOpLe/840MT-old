@@ -7,7 +7,7 @@ beatmap_list = requests.get('http://127.0.0.1/api/beatmaplist').json()
 
 def check_score(user_id,score,sql_scores):
     if int(score['beatmap_id']) in beatmap_list:
-        if score['rank'] != 'F':
+        if score['date'] > '2020-05-03 00:00:00':
             for sql_date in sql_scores:
                 if sql_date['date'] == score['date']:
                     return False
