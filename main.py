@@ -53,7 +53,7 @@ def localapi(name=None):
         return jsonify(sql.get_beatmaps_list())
 
     elif name == 'userlist' and request.method == 'GET': # 取得所有報名玩家 ID
-        return jsonify(sql.get_all_users_id())
+        return jsonify(sql.get_all_users())
 
     elif name == 'users' and request.method == 'GET': # 取得玩家資訊 (From osu api)
         return jsonify(sql.get_user(request.args['u']))

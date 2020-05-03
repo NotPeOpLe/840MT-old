@@ -22,11 +22,11 @@ def get_beatmaps_list():
         beatmap_list.append(int(bid[0]))
     return beatmap_list
 
-def get_all_users_id():
-    sql_data = c.execute("SELECT user_id FROM users")
+def get_all_users():
+    sql_data = c.execute("SELECT user_id, username FROM users")
     user_list = []
     for uid in sql_data:
-        user_list.append(uid[0])
+        user_list.append(uid)
     return user_list
 
 def get_user(user_id=0,username=''):
