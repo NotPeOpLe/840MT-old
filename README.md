@@ -1,5 +1,10 @@
 # 840MT
  840月賽網頁程式
+ 
+# 必備的東西
+- Python 3.7.5 以上
+- flask
+- requsets
 
 # TO-DO
 - [ ] 玩家頁面
