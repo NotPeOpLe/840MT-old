@@ -126,3 +126,4 @@ dmypy.json
 config.py
 map.txt
 data.db
+.vscode/settings.json

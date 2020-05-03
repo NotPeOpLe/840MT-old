@@ -76,23 +76,23 @@ def get_scores(user_id=0,username=''):
 
 def get_ranking():
     data = []
-    sql_data = c.execute('''SELECT A.*, B.rank_score, B.SS, B.S, B.A
+    sql_data = c.execute('''SELECT RANK() OVER(ORDER BY B.rank_score DESC), A.*, B.rank_score, B.SS, B.S, B.A
                     FROM ranking_statistics1 A
                     LEFT JOIN ranking_statistics2 B
-                    ON A.user_id = B.user_id
-                    ORDER BY B.rank_score DESC''')
+                    ON A.user_id = B.user_id''')
     for s in sql_data:
         d = {
-            "user_id": s[0],
-            "username": s[1],
-            "country": s[2],
-            "play_count": s[3],
-            "accuracy": s[4],
-            "total_score": s[5],
-            "rank_score": s[6],
-            "SS": s[7],
-            "S": s[8],
-            "A": s[9]
+            "rank": s[0],
+            "user_id": s[1],
+            "username": s[2],
+            "country": s[3],
+            "play_count": s[4],
+            "accuracy": s[5],
+            "total_score": s[6],
+            "rank_score": s[7],
+            "SS": s[8],
+            "S": s[9],
+            "A": s[10]
         }
         data.append(d)
     return data

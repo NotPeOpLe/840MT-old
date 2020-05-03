@@ -17,7 +17,7 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    return jsonify(sql.get_ranking())
+    return render_template('ranking.html', ranking=sql.get_ranking())
 
 # API
 @app.route('/api/<name>', methods=['POST', 'GET'])
@@ -69,14 +69,16 @@ def register():
 # Oauth回傳用
 @app.route('/callback', methods=['GET'])
 def callback():
+    if request.args['error']:
+        return redirect(url_for('bad'))
     u = api.get_token(request.args['code'])
     if request.args['state'] == 'register':
         user = api.get_user(u['access_token'])
         try:
             sql.import_user(user,u['access_token'],u['refresh_token'])
-        except Exception:
+        except:
             return redirect(url_for('bad'))
-        finally:
+        else:
             return redirect(url_for('ok'))
 
 @app.route('/ok')
@@ -94,6 +96,10 @@ def profile(user_id):
     user = sql.get_user_old(user_id)
     return render_template('profile.html', scores=scores, user=user)
 
+@app.route('/ranking')
+def ranking():
+    return render_template('ranking.html', ranking=sql.get_ranking())
+
 # 錯誤回應
 @app.errorhandler(404)
 def page_not_found(error):
@@ -110,6 +116,10 @@ def special_exception_handler(error):
 @app.template_filter('acc')
 def acc_format(value):
     return format(float(value), '.2%')
+
+@app.template_filter('integer')
+def acc_format(value):
+    return format(int(value), ',')
 
 if __name__ == '__main__':
     app.run(port=80)
