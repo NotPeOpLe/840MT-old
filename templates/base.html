@@ -3,7 +3,7 @@
 <head>
     {% block head %}
     <title>{% block title %}{% endblock %} - 840MT</title>
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap" rel="stylesheet">
@@ -60,6 +60,11 @@
                 </div>
                 </div>
 	    </nav>
+        {% block background %}
+        <section class="hero-wrap img" style="background-image: url({{url_for('static', filename='images/backgrounds/')}}{% block bg %}TofuMang.png{% endblock %}); height: 300px;">
+            <div class="overlay"></div>
+        </section>
+        {% endblock %}
         {% block content %}{% endblock %}
         <footer class="ftco-section ftco-section-2">
 	  	    <div class="col-md-12 text-center">
