@@ -50,7 +50,7 @@ def get_scores(user_id=0,username=''):
     if user_id == -1:
         sql_data = c.execute(f"SELECT * FROM scores")
     else:
-        sql_data = c.execute(f"SELECT * FROM scores WHERE user_id={user_id}")
+        sql_data = c.execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC")
 
     for s in sql_data:
         d = {
