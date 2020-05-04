@@ -30,7 +30,7 @@ def get_all_users():
     return user_list
 
 def get_user(user_id=0,username=''):
-    sql_data = c.execute(f"SELECT * FROM users WHERE user_id={user_id}")
+    sql_data = c.execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
     for d in sql_data:
         user = api.get_user(d[3])
     return user
