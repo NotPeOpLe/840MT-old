@@ -41,13 +41,13 @@
                 <tr>
                     <td class="text-center">{{ score['beatmap_id'] }}</td>
                     <td class="text-center"><img src="{{ url_for('static',filename='images/badges/score-ranks-v2019/') }}{{ score['rank'] }}.svg"></td>
-                    <td class="text-center">{{ score['score'] }}</td>
+                    <td class="text-center">{{ score['score'] | integer }}</td>
                     <td class="text-center">{{ score['accuracy'] | acc }}</td>
-                    <td class="text-center">{{ score['maxcombo'] }}</td>
-                    <td class="text-center">{{ score['count300'] }}</td>
-                    <td class="text-center">{{ score['count100'] }}</td>
-                    <td class="text-center">{{ score['count50'] }}</td>
-                    <td class="text-center">{{ score['countmiss'] }}</td>
+                    <td class="text-center">{{ score['maxcombo'] | integer }}</td>
+                    <td class="text-center">{{ score['count300'] | integer }}</td>
+                    <td class="text-center">{{ score['count100'] | integer }}</td>
+                    <td class="text-center">{{ score['count50']  | integer}}</td>
+                    <td class="text-center">{{ score['countmiss']| integer }}</td>
                     <td class="text-center">{{ score['enabled_mods'] }}</td>
                     <td class="text-left">{{ score['date'] }}</td>
                 </tr>
