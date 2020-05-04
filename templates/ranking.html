@@ -2,35 +2,33 @@
 {% block title %}排行榜{% endblock %}
 {% block content %}
 <section class="ftco-section">
-    <div class="container">
-        <table class="table table-sm table-responsive-md table-striped table-hover">
-            <thead>
+    <div class="container table-responsive-lg">
+        <table class="table table-sm table-striped table-hover">
+            <thead class="thead-light">
                 <tr>
-                    <th>排名</th>
-                    <th>國家</th>
-                    <th>玩家</th>
-                    <th>準確率</th>
-                    <th>遊戲次數</th>
-                    <th>總分</th>
-                    <th>Ranked 總分</th>
-                    <th>SS</th>
-                    <th>S</th>
-                    <th>A</th>
+                    <th class="text-center">#</th>
+                    <th class="text-left">玩家</th>
+                    <th class="text-center">準確率</th>
+                    <th class="text-center">遊戲次數</th>
+                    <th class="text-center">總分</th>
+                    <th class="text-center">Ranked 總分</th>
+                    <th class="text-center">SS</th>
+                    <th class="text-center">S</th>
+                    <th class="text-center">A</th>
                 </tr>
             </thead>
             <tbody>
                 {% for rank in ranking %}
                 <tr>
-                    <td>{{ rank['rank'] }}</td>
-                    <td><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24></td>
-                    <td><a href="profile/{{ rank['user_id'] }}">{{ rank['username'] }}<a></td>
-                    <td>{{ rank['accuracy'] | acc }}</td>
-                    <td>{{ rank['play_count'] | integer }}</td>
-                    <td>{{ rank['total_score'] | integer }}</td>
-                    <td>{{ rank['rank_score'] | integer }}</td>
-                    <td>{{ rank['SS'] | integer }}</td>
-                    <td>{{ rank['S'] | integer }}</td>
-                    <td>{{ rank['A'] | integer }}</td>
+                    <td class="text-center">{{ rank['rank'] }}</td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24><a href="profile/{{ rank['user_id'] }}"> {{ rank['username'] }}<a></td>
+                    <td class="text-center">{{ rank['accuracy'] | acc }}</td>
+                    <td class="text-center">{{ rank['play_count'] | integer }}</td>
+                    <td class="text-center">{{ rank['total_score'] | integer }}</td>
+                    <td class="text-center">{{ rank['rank_score'] | integer }}</td>
+                    <td class="text-center">{{ rank['SS'] | integer }}</td>
+                    <td class="text-center">{{ rank['S'] | integer }}</td>
+                    <td class="text-center">{{ rank['A'] | integer }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
