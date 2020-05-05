@@ -17,7 +17,7 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    return render_template('ranking.html', ranking=sql.get_ranking())
+    return render_template('players.html', users=sql.get_all_users())
 
 # API
 @app.route('/api/<name>', methods=['POST', 'GET'])
@@ -100,6 +100,10 @@ def profile(user_id):
 def ranking():
     return render_template('ranking.html', ranking=sql.get_ranking())
 
+@app.route('/players')
+def players():
+    return render_template('players.html', users=sql.get_all_users())
+
 # 錯誤回應
 @app.errorhandler(404)
 def page_not_found(error):
@@ -110,7 +114,7 @@ def special_exception_handler(error):
     return '<h1>什麼都沒有啦，哈哈!</h1>', 500
 
 @app.errorhandler(400)
-def special_exception_handler(error):
+def bad_request(error):
     return 'Bad request', 400
 
 @app.template_filter('acc')
@@ -118,7 +122,7 @@ def acc_format(value):
     return format(float(value), '.2%')
 
 @app.template_filter('integer')
-def acc_format(value):
+def int_format(value):
     return format(int(value), ',')
 
 if __name__ == '__main__':

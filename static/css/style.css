@@ -9220,3 +9220,20 @@ h1, h2, h3, h4, h5,
 .navbar-brand {
   font-weight: 700;
   font-size: 22px; }
+
+.block {
+  float: left;
+  margin: 24px;
+  width: 128px;
+  max-width: 100%;
+  transition: 0.4s;
+}
+
+.avatar{
+  opacity: 0.7;
+  transition: 0.2s;
+}
+.avatar:hover, .block:hover > .avatar {
+  opacity: 1;
+}
+

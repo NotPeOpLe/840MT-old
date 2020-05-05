@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}排行榜{% endblock %}
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="h1 col-12 text-center">玩家名單</div>
+                <div class="detail text-center">
+                    <div>
+                        {% for user in users %}
+                        <a href="https://osu.ppy.sh/users/{{user[0]}}" class="block">
+                            <div class="avatar col-12" style="height: 128px; background: url(https://a.ppy.sh/{{user[0]}}) no-repeat center;background-size: 100%;"></div>
+                            <div class="col-12 text-center" style="padding: 0; white-space: nowrap; font-size: 18px;">{{user[1]}}</div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
