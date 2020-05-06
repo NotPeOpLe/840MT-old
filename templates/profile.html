@@ -40,7 +40,7 @@
                 {% for score in scores %}
                 <tr>
                     <td class="text-center">{{ score['beatmap_id'] }}</td>
-                    <td class="text-center"><img src="{{ url_for('static',filename='images/badges/score-ranks-v2019/') }}{{ score['rank'] }}.svg"></td>
+                    <td class="text-center"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
                     <td class="text-center">{{ score['score'] | integer }}</td>
                     <td class="text-center">{{ score['accuracy'] | acc }}</td>
                     <td class="text-center">{{ score['maxcombo'] | integer }}</td>
