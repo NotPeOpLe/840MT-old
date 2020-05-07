@@ -1,4 +1,4 @@
-from api import get_user_recent
+from OsuAPI import get_user_recent
 from time import sleep, strptime, mktime
 import requests as r
 import logging as l
@@ -10,10 +10,10 @@ l.basicConfig(
 )
 l.FileHandler('track_score.log','a','UTF-8')
 
-player_list = r.get('http://127.0.0.1/api/userlist').json()
+player_list = r.get('http://127.0.0.1/api/users/-1').json()
 l.info('載入 {} 位玩家'.format(len(player_list)))
 
-beatmap_list = r.get('http://127.0.0.1/api/beatmaplist').json()
+beatmap_list = r.get('http://127.0.0.1/api/maps').json()
 l.info('載入 {} 張圖譜'.format(len(beatmap_list)))
 
 def check_score(user_id,score,sql_scores):

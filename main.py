@@ -1,12 +1,14 @@
 # 網頁主程式
 
 from flask import Flask, render_template, jsonify, request, url_for, redirect
-import api
+import OsuAPI
 import sql
+from LocalAPI import LocalAPI
 
 app = Flask(__name__)
 app.debug = True
 app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
+app.register_blueprint(LocalAPI,url_prefix='/api') 
 
 # 網站的首頁
 @app.route('/')
@@ -19,61 +21,20 @@ def index():
 def test():
     return render_template('players.html', users=sql.get_all_users())
 
-# API
-@app.route('/api/<name>', methods=['POST', 'GET'])
-def localapi(name=None):
-    
-    if name == 'scores': # 分數
-        if request.method == 'POST': # 上傳分數
-            score = {
-                "beatmap_id": request.args['beatmap_id'],
-                "score": request.args['score'],
-                "maxcombo": request.args['maxcombo'],
-                "count50": request.args['count50'],
-                "count100": request.args['count100'],
-                "count300": request.args['count300'],
-                "countmiss": request.args['countmiss'],
-                "countkatu": request.args['countkatu'],
-                "countgeki": request.args['countgeki'],
-                "perfect": request.args['perfect'],
-                "enabled_mods": request.args['enabled_mods'],
-                "user_id": request.args['user_id'],
-                "date": request.args['date'],
-                "rank": request.args['rank'],
-            }
-            sql.submit_score(score)
-            sql.submit_score_test(score)
-            return score
-
-        elif request.method == 'GET': # 取得分數
-            scores = sql.get_scores(int(request.args['u']))
-            return jsonify(scores)
-
-    elif name == 'beatmaplist' and request.method == 'GET': # 取得所有圖池Map ID
-        return jsonify(sql.get_beatmaps_list())
-
-    elif name == 'userlist' and request.method == 'GET': # 取得所有報名玩家 ID
-        return jsonify(sql.get_all_users())
-
-    elif name == 'users' and request.method == 'GET': # 取得玩家資訊 (From osu api)
-        return jsonify(sql.get_user(request.args['u']))
-
-    return "Nothing..."
-
 # 玩家註冊/報名
 @app.route('/register')
 def register():
-    print(api.authorize('register','users.read'))
-    return redirect(api.authorize('register','users.read'))
+    print(OsuAPI.authorize('register','users.read'))
+    return redirect(OsuAPI.authorize('register','users.read'))
 
 # Oauth回傳用
 @app.route('/callback', methods=['GET'])
 def callback():
     if request.args['error']:
         return redirect(url_for('bad'))
-    u = api.get_token(request.args['code'])
+    u = OsuAPI.get_token(request.args['code'])
     if request.args['state'] == 'register':
-        user = api.get_user(u['access_token'])
+        user = OsuAPI.get_user(u['access_token'])
         try:
             sql.import_user(user,u['access_token'],u['refresh_token'])
         except:
@@ -90,7 +51,7 @@ def bad():
     return "<h1>No!</h1>"
 
 # 玩家個人頁面
-@app.route('/profile/<int:user_id>')
+@app.route('/profile/<int:user_id>/')
 def profile(user_id):
     scores = sql.get_scores(user_id)
     user = sql.get_user_old(user_id)

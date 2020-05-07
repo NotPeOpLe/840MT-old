@@ -47,3 +47,9 @@ def get_user_recent(user_id):
     params = f"k={config.API_KEY}&u={user_id}&limit=50&m=0&type=id"
     r = requests.get(url, params)
     return r.json()
+
+def get_old_user(user_id):
+    url = urlv1 + "get_user"
+    params = f"k={config.API_KEY}&u={user_id}&type=id"
+    r = requests.get(url, params)
+    return r.json()

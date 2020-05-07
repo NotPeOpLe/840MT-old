@@ -2,7 +2,7 @@ import sqlite3
 import requests
 import config
 import json
-import api
+import OsuAPI
 import time
 
 conn = sqlite3.connect("data.db", check_same_thread=False)
@@ -32,7 +32,7 @@ def get_all_users():
 def get_user(user_id=0,username=''):
     sql_data = c.execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
     for d in sql_data:
-        user = api.get_user(d[3])
+        user = OsuAPI.get_user(d[3])
     return user
 
 def get_user_old(user_id=0):
@@ -101,19 +101,19 @@ def get_ranking():
 def import_beatmaps(beatmaps):
     if type(beatmaps) == list:
         for beatmaps_id in beatmaps:
-            import_beatmap_sql(api.get_beatmap(beatmaps_id))
+            import_beatmap_sql(OsuAPI.get_beatmap(beatmaps_id))
     else:
-        import_beatmap_sql(api.get_beatmap(beatmaps))
+        import_beatmap_sql(OsuAPI.get_beatmap(beatmaps))
 
 
 def import_beatmapsets(beatmapsets):
     if type(beatmapsets) == list:
         for beatmapsets_id in beatmapsets:
-            beatmapset = api.get_beatmapset(beatmapsets_id)
+            beatmapset = OsuAPI.get_beatmapset(beatmapsets_id)
             for beatmap in beatmapset:
                 import_beatmap_sql([beatmap])
     else:
-        beatmapset = api.get_beatmapset(beatmapsets)
+        beatmapset = OsuAPI.get_beatmapset(beatmapsets)
         for beatmap in beatmapset:
             import_beatmap_sql([beatmap])
 
