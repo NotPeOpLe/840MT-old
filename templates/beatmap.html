@@ -1,7 +1,12 @@
-<!DOCTYPE html>
-<html>
-    <head></head>
-    <body>
-    <h1></h1>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}圖譜{% endblock %}
+{% block bg %}https://assets.ppy.sh/beatmaps/{{data['beatmapset_id']}}/covers/cover.jpg{% endblock %}
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        </div>s
+    <div class="container">
+        <h1>{{data}}</h1>
+    </div>
+</section>
+{% endblock %}

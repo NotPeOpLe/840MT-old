@@ -4,6 +4,7 @@ import config
 import json
 import OsuAPI
 import time
+import mods
 
 conn = sqlite3.connect("data.db", check_same_thread=False)
 c = conn.cursor()
@@ -21,6 +22,75 @@ def get_beatmaps_list():
     for bid in sql_data:
         beatmap_list.append(int(bid[0]))
     return beatmap_list
+
+def get_maps():
+    data = []
+    sql_data = c.execute("""
+        SELECT beatmapset_id,artist,title,creator,count(beatmapset_id) AS count_map, MAX(difficultyrating) AS maindiff,beatmap_id
+        FROM beatmaps 
+        GROUP BY beatmapset_id 
+        ORDER BY beatmapset_id
+        """)
+
+    for item in sql_data:
+        d = {
+            'beatmapset_id': item[0],
+            'artist': item[1],
+            'title': item[2],
+            'creator': item[3],
+            'count_map': item[4],
+            'maindiff_id': item[6]
+        }
+        data.append(d)
+
+    return data
+
+def get_beatmap(mapid: int):
+    data = {}
+    sql_data = c.execute('SELECT * FROM beatmaps WHERE beatmap_id = %d' % mapid)
+    for d in sql_data:
+        data = {
+            'beatmapset_id': d[0],
+            'beatmap_id': d[1],
+            "approved": d[2],
+            "total_length": d[3],
+            "hit_length": d[4],
+            "version": d[5],
+            "file_md5": d[6],
+            "cs": d[7],
+            "od": d[8],
+            "ar": d[9],
+            "hp": d[10],
+            "mode": d[11],
+            "artist": d[12],
+            "artist_unicode": d[13],
+            "title": d[14],
+            "title_unicode": d[15] ,
+            "creator": d[16],
+            "creator_id": d[17],
+            "bpm": d[18],
+            "difficultyrating": d[19]
+        }
+    return data
+
+def get_beatmapset(setid: int):
+    data = {}
+    mapid = []
+    set_data = c.execute('SELECT beatmapset_id, artist, artist_unicode, title, title_unicode, creator FROM beatmaps WHERE beatmapset_id = %d LIMIT 1' % setid)
+    for d in set_data:
+        data = {
+            'beatmapset_id': d[0],
+            "artist": d[1],
+            "artist_unicode": d[2],
+            "title": d[3],
+            "title_unicode": d[4] ,
+            "creator": d[5]
+        }
+    mapids = c.execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
+    for m in mapids:
+        mapid.append([m[0],m[1],m[2]])
+    data['mapids']= mapid
+    return data
 
 def get_all_users():
     sql_data = c.execute("SELECT user_id, username FROM users")
@@ -45,7 +115,7 @@ def get_user_old(user_id=0):
         data['country'] = d[2]
     return data
 
-def get_scores(user_id=0,username=''):
+def get_scores(user_id: int):
     data = []
     if user_id == -1:
         sql_data = c.execute(f"SELECT * FROM scores")
@@ -64,7 +134,7 @@ def get_scores(user_id=0,username=''):
             "countkatu": s[7],
             "countgeki": s[8],
             "perfect": s[9],
-            "enabled_mods": s[10],
+            "enabled_mods": mods.formatMods(s[10]),
             "user_id": s[11],
             "date": s[12],
             "rank": s[13],
