@@ -20,35 +20,35 @@
 <section class="ftco-section bg-light">
     <div class="container">
         <h3>遊玩紀錄</h3>
-        <table class="table table-sm table-responsive-md table-striped table-hover">
+        <table class="table table-sm table-responsive-md table-striped table-hover h6">
             <thead class="thead-light">
                 <tr>
-                    <th class="text-center">圖ID</th>
-                    <th class="text-center">rank</th>
-                    <th class="text-center">分數</th>
-                    <th class="text-center">準確率</th>
-                    <th class="text-center">最高combo</th>
-                    <th class="text-center">300</th>
-                    <th class="text-center">100</th>
-                    <th class="text-center">50</th>
-                    <th class="text-center">miss</th>
-                    <th class="text-center">mods</th>
+                    <th class="text-left">圖ID</th>
+                    <th class="text-left">分數</th>
+                    <th class="text-left">準確率</th>
+                    <th class="text-left">rank</th>
+                    <th class="text-left">maxcombo</th>
+                    <th class="text-left">300</th>
+                    <th class="text-left">100</th>
+                    <th class="text-left">50</th>
+                    <th class="text-left">miss</th>
+                    <th class="text-left">mods</th>
                     <th class="text-left">日期</th>
                 </tr>
             </thead>
             <tbody>
                 {% for score in scores %}
                 <tr>
-                    <td class="text-center">{{ score['beatmap_id'] }}</td>
-                    <td class="text-center"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
-                    <td class="text-center">{{ score['score']    | integer }}</td>
-                    <td class="text-center">{{ score['accuracy'] | acc }}</td>
-                    <td class="text-center">{{ score['maxcombo'] | integer }}</td>
-                    <td class="text-center">{{ score['count300'] | integer }}</td>
-                    <td class="text-center">{{ score['count100'] | integer }}</td>
-                    <td class="text-center">{{ score['count50']  | integer }}</td>
-                    <td class="text-center">{{ score['countmiss']| integer }}</td>
-                    <td class="text-center">{{ score['enabled_mods'] }}</td>
+                    <td class="text-left">{{ score['beatmap_id'] }}</td>
+                    <td class="text-left">{{ score['score']    | integer }}</td>
+                    <td class="text-left">{{ score['accuracy'] | acc }}</td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
+                    <td class="text-left">{{ score['maxcombo'] | integer }}</td>
+                    <td class="text-left">{{ score['count300'] | integer }}</td>
+                    <td class="text-left">{{ score['count100'] | integer }}</td>
+                    <td class="text-left">{{ score['count50']  | integer }}</td>
+                    <td class="text-left">{{ score['countmiss']| integer }}</td>
+                    <td class="text-left">{% for mod in score['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
                     <td class="text-left">{{ score['date'] }}</td>
                 </tr>
                 {% endfor %}
