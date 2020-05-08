@@ -1941,7 +1941,7 @@ pre code {
 
 .table-sm th,
 .table-sm td {
-  padding: 0.3rem;
+  padding: 3px;
 }
 
 .table-bordered {
@@ -13384,10 +13384,7 @@ h5,
 
 .block {
   float: left;
-  margin-top: 15px;
-  margin-right: auto;
-  margin-bottom: 15px;
-  margin-left: auto;
+  margin: 6.5px;
   width: 128px;
   max-width: 100%;
   transition: 0.4s;
@@ -13401,4 +13398,8 @@ h5,
 .avatar:hover,
 .block:hover>.avatar {
   opacity: 1;
+}
+
+.mods {
+  width: 24px;
 }
