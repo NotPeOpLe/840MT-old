@@ -3,7 +3,6 @@
 from flask import Flask, render_template, jsonify, request, url_for, redirect
 import OsuAPI
 import sql
-import mods
 from LocalAPI import LocalAPI
 
 app = Flask(__name__)
@@ -20,7 +19,7 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    return jsonify(sql.get_beatmapset(297558))
+    return render_template('players.html', users=sql.get_all_users())
 
 # 玩家註冊/報名
 @app.route('/register')
@@ -43,49 +42,41 @@ def callback():
         else:
             return redirect(url_for('ok'))
 
-@app.route('/ok/')
+@app.route('/ok')
 def ok():
     return "<h1>Ok!</h1>"
     
-@app.route('/bad/')
+@app.route('/bad')
 def bad():
     return "<h1>No!</h1>"
 
-@app.route('/ranking/')
-def ranking():
-    return render_template('ranking.html', ranking=sql.get_ranking())
-
-@app.route('/players/')
-def players():
-    return render_template('players.html', users=sql.get_all_users())
-
 # 玩家個人頁面
-@app.route('/players/<int:user_id>/')
+@app.route('/profile/<int:user_id>/')
 def profile(user_id):
     scores = sql.get_scores(user_id)
     user = sql.get_user_old(user_id)
     return render_template('profile.html', scores=scores, user=user)
 
-@app.route('/maps/')
-def maps():
-    return render_template('maps.html', maps=sql.get_maps())
+@app.route('/ranking')
+def ranking():
+    return render_template('ranking.html', ranking=sql.get_ranking())
 
-@app.route('/maps/<int:mapid>')
-def beatmap(mapid):
-    return render_template('beatmap.html', data=sql.get_beatmap(mapid))
+@app.route('/players')
+def players():
+    return render_template('players.html', users=sql.get_all_users())
 
 # 錯誤回應
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('error.html',errmsg='你好，我是404!'), 404
+    return "<h1>什麼都沒有啦，哈哈!</h1>", 404
 
 @app.errorhandler(500)
 def special_exception_handler(error):
-    return render_template('error.html',errmsg='你好，我是500!'), 404
+    return '<h1>什麼都沒有啦，哈哈!</h1>', 500
 
 @app.errorhandler(400)
 def bad_request(error):
-    return render_template('error.html',errmsg='你好，我是400!'), 404
+    return 'Bad request', 400
 
 @app.template_filter('acc')
 def acc_format(value):
@@ -94,12 +85,6 @@ def acc_format(value):
 @app.template_filter('integer')
 def int_format(value):
     return format(int(value), ',')
-
-@app.template_filter('mods')
-def mods_format(vaule):
-    m = mods.formatMods(vaule)
-    return '<img >'
-
 
 if __name__ == '__main__':
     app.run(port=80)

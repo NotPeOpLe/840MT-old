@@ -21,7 +21,7 @@
                 {% for rank in ranking %}
                 <tr>
                     <td class="text-center">{{ rank['rank'] }}</td>
-                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24><a href="/players/{{ rank['user_id'] }}/"> {{ rank['username'] }}<a></td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24><a href="profile/{{ rank['user_id'] }}"> {{ rank['username'] }}<a></td>
                     <td class="text-center">{{ rank['accuracy'] | acc }}</td>
                     <td class="text-center">{{ rank['play_count'] | integer }}</td>
                     <td class="text-center">{{ rank['total_score'] | integer }}</td>
