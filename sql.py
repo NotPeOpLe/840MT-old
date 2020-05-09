@@ -167,10 +167,10 @@ def get_ranking():
         data.append(d)
     return data
 
-def get_beatmap_ranking(beatmap_id: int):
+def get_beatmap_ranking(map_id: int):
     data = []
-    sql_data = c.execute('''SELECT RANK() OVER(ORDER BY B.rank_score DESC), S.rank, MAX(S.score), S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50 S.countmiss, S.enabled_mods 
-                FROM scores AS S users AS U WHERE S.user_id=U.user_id AND S.beatmap_id=%d GROUP BY U.user_id ORDER BY S.score DESC''' % beatmap_id)
+    sql_data = c.execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, MAX(S.score), S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods 
+                FROM scores AS S, users AS U WHERE S.user_id=U.user_id AND S.beatmap_id = {map_id} GROUP BY U.user_id ORDER BY S.score DESC''')
 
     for s in sql_data:
         d = {
