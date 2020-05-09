@@ -72,7 +72,9 @@ def maps():
 
 @app.route('/maps/<int:mapid>')
 def beatmap(mapid):
-    return render_template('beatmap.html', data=sql.get_beatmap(mapid))
+    beatmap = sql.get_beatmap(mapid)
+    mapset = sql.get_beatmapset(beatmap['beatmapset_id'])
+    return render_template('beatmap.html', mapset=mapset, beatmap=beatmap)
 
 # 錯誤回應
 @app.errorhandler(404)
@@ -87,6 +89,7 @@ def special_exception_handler(error):
 def bad_request(error):
     return render_template('error.html',errmsg='你好，我是400!'), 404
 
+# 過濾器
 @app.template_filter('acc')
 def acc_format(value):
     return format(float(value), '.2%')
