@@ -89,7 +89,7 @@ def get_beatmapset(setid: int):
     mapids = c.execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
     for m in mapids:
         mapid.append([m[0],m[1],m[2]])
-    data['mapids']= mapid
+    data['mapids'] = mapid
     return data
 
 def get_all_users():
