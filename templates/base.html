@@ -3,7 +3,7 @@
 <head>
     {% block head %}
     <title>{% block title %}{% endblock %} - 840MT</title>
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap" rel="stylesheet">
@@ -46,10 +46,13 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-left">
                         <a href="#" class="dropdown-item"> All Components</a>
-                        <a href="#" class="dropdown-item"> Documentation</a>
+                        <a href="/test" class="dropdown-item"> test</a>
                     </div>
                     </li>
-                    <li class="nav-item"><a href="register" class="nav-link icon d-flex align-items-center"></i>參加測試!</a></li>
+                    <li class="nav-item"><a href="/maps/" class="nav-link icon d-flex align-items-center"></i>圖池</a></li>
+                    <li class="nav-item"><a href="/players/" class="nav-link icon d-flex align-items-center"></i>參賽名單</a></li>
+                    <li class="nav-item"><a href="/ranking/" class="nav-link icon d-flex align-items-center"></i>排行榜</a></li>
+                    <li class="nav-item"><a href="/register" class="nav-link icon d-flex align-items-center"></i>參加測試!</a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a href="#" class="nav-link icon d-flex align-items-center"><i class="ion-logo-facebook"></i></a></li>
@@ -59,6 +62,11 @@
                 </div>
                 </div>
 	    </nav>
+        {% block background %}
+        <section class="hero-wrap img" style="background-image: url({% block bg %}{{url_for('static', filename='images/backgrounds/')}}TofuMang.png{% endblock %}); height: 300px;">
+            <div class="overlay"></div>
+        </section>
+        {% endblock %}
         {% block content %}{% endblock %}
         <footer class="ftco-section ftco-section-2">
 	  	    <div class="col-md-12 text-center">
@@ -91,4 +99,10 @@
     <script src="{{url_for('static', filename='js/moment-with-locales.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/bootstrap-datetimepicker.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/main.js')}}"></script>
+
+    <script>
+        $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+    </script>
 </body>

@@ -1,24 +1,17 @@
 {% extends "base.html" %}
 {% block title %}{{ user['username'] }}的個人頁面{% endblock %}
 {% block content %}
-<section class="hero-wrap img" style="background-image: url(images/bg_3.jpg); height: 300px;">
-    <div class="overlay"></div>
-</section>
-
 <section class="ftco-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-2">
-                        <img src="https://a.ppy.sh/{{ user['user_id'] }}" class="rounded img-fluid" width=160>
-                    </div>
-                    <div class="text-left">
-                        <h1>{{ user['username'] }}</h1>
-                        <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country'] }}.png" width=24>  {{ user['country'] }}
-                        <p>自我介紹(未來功能，下次測試將實現)</p>
-                    </div>
-                </div>
+            <div class="col-5 col-md-2">
+                <img src="https://a.ppy.sh/{{ user['user_id'] }}" class="rounded img-fluid" width=160>
+            </div>
+            <div class="col-12 col-md-8">
+                <h1>{{ user['username'] }}</h1>
+                <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country'] }}.png" width=24>  {{ user['country'] }}
+                | <a href="https://osu.ppy.sh/users/{{ user['user_id'] }}">osu!個人頁面<a>
+                <p>自我介紹(未來功能，下次測試將實現)</p>
             </div>
         </div>
     </div>
@@ -27,36 +20,36 @@
 <section class="ftco-section bg-light">
     <div class="container">
         <h3>遊玩紀錄</h3>
-        <table class="table table-sm table-responsive-md table-striped table-hover">
-            <thead>
+        <table class="table table-sm table-responsive-md table-striped table-hover h6">
+            <thead class="thead-light">
                 <tr>
-                    <th>map_id</th>
-                    <th>rank</th>
-                    <th>score</th>
-                    <th>acc</th>
-                    <th>max combo</th>
-                    <th>300</th>
-                    <th>100</th>
-                    <th>50</th>
-                    <th>miss</th>
-                    <th>mods</th>
-                    <th>date</th>
+                    <th class="text-left">圖ID</th>
+                    <th class="text-left">分數</th>
+                    <th class="text-left">準確率</th>
+                    <th class="text-left">rank</th>
+                    <th class="text-left">maxcombo</th>
+                    <th class="text-left">300</th>
+                    <th class="text-left">100</th>
+                    <th class="text-left">50</th>
+                    <th class="text-left">miss</th>
+                    <th class="text-left">mods</th>
+                    <th class="text-left">日期</th>
                 </tr>
             </thead>
             <tbody>
                 {% for score in scores %}
                 <tr>
-                    <td>{{ score['beatmap_id'] }}</td>
-                    <td><img src="{{ url_for('static',filename='images/badges/score-ranks-v2019/') }}{{ score['rank'] }}.svg"></td>
-                    <td>{{ score['score'] }}</td>
-                    <td>{{ score['accuracy'] | acc }}</td>
-                    <td>{{ score['maxcombo'] }}</td>
-                    <td>{{ score['count300'] }}</td>
-                    <td>{{ score['count100'] }}</td>
-                    <td>{{ score['count50'] }}</td>
-                    <td>{{ score['countmiss'] }}</td>
-                    <td>{{ score['enabled_mods'] }}</td>
-                    <td>{{ score['date'] }}</td>
+                    <td class="text-left">{{ score['beatmap_id'] }}</td>
+                    <td class="text-left">{{ score['score']    | integer }}</td>
+                    <td class="text-left">{{ score['accuracy'] | acc }}</td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
+                    <td class="text-left">{{ score['maxcombo'] | integer }}</td>
+                    <td class="text-left">{{ score['count300'] | integer }}</td>
+                    <td class="text-left">{{ score['count100'] | integer }}</td>
+                    <td class="text-left">{{ score['count50']  | integer }}</td>
+                    <td class="text-left">{{ score['countmiss']| integer }}</td>
+                    <td class="text-left">{% for mod in score['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
+                    <td class="text-left">{{ score['date'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
