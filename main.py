@@ -74,7 +74,8 @@ def maps():
 def beatmap(mapid):
     beatmap = sql.get_beatmap(mapid)
     mapset = sql.get_beatmapset(beatmap['beatmapset_id'])
-    return render_template('beatmap.html', mapset=mapset, beatmap=beatmap)
+    beatmap_ranking = sql.get_beatmap_ranking(mapid)
+    return render_template('beatmap.html', mapset=mapset, beatmap=beatmap, ranking=beatmap_ranking)
 
 # 錯誤回應
 @app.errorhandler(404)
