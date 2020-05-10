@@ -7,11 +7,10 @@ import time
 import mods
 
 conn = pymysql.connect(
-    host="192.168.1.108",
-    port=3306,
-    user="mt",
-    passwd="Wr9FmDw4",
-    database="840MT",
+    host=config.SQLserver,
+    user=config.SQLuser,
+    passwd=config.SQLpw,
+    database=config.SQLdb,
     charset="utf8"
 )
 c = conn.cursor()
@@ -86,8 +85,9 @@ def get_beatmap(mapid: int):
 def get_beatmapset(setid: int):
     data = {}
     mapid = []
-    set_data = c.execute('SELECT beatmapset_id, artist, artist_unicode, title, title_unicode, creator FROM beatmaps WHERE beatmapset_id = %d LIMIT 1' % setid)
-    for d in set_data:
+    c.execute('SELECT beatmapset_id, artist, artist_unicode, title, title_unicode, creator FROM beatmaps WHERE beatmapset_id = %d LIMIT 1' % setid)
+    row = c.fetchall() 
+    for d in row:
         data = {
             'beatmapset_id': d[0],
             "artist": d[1],
@@ -96,8 +96,9 @@ def get_beatmapset(setid: int):
             "title_unicode": d[4] ,
             "creator": d[5]
         }
-    mapids = c.execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
-    for m in mapids:
+    c.execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
+    row = c.fetchall() 
+    for m in row:
         mapid.append([m[0],m[1],m[2]])
     data['mapids'] = mapid
     return data
