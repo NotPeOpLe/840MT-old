@@ -5,7 +5,7 @@
 <section class="ftco-section bg-light">
     <div class="container">
         {% for diff in mapset['mapids'] %}
-        <button>{{diff[1]}}</button>
+		<a class="btn btn-{{diff[3]}} {% if diff[1] == beatmap['version'] %}active{% endif %}" href="/maps/{{diff[0]}}" role="button" style="margin-bottom: 4px;">{{diff[1]}} [{{diff[2] | star}}★]</a>
         {% endfor %}
     </div>
 </section>

@@ -15,7 +15,7 @@ app.register_blueprint(LocalAPI,url_prefix='/api')
 @app.route('/')
 def index():
     # count 是簡單統計報名玩家、成績上船的數量
-    return render_template('index.html')
+    return render_template('index.html', c=sql.get_count())
 
 # 調試用
 @app.route('/test')
@@ -66,7 +66,7 @@ def profile(user_id):
 
 @app.route('/maps/')
 def maps():
-    return render_template('maps.html', maps=sql.get_maps())
+    return render_template('maps.html', maps=sql.get_maps(), c=sql.get_count())
 
 @app.route('/maps/<int:mapid>')
 def beatmap(mapid):
@@ -92,6 +92,10 @@ def bad_request(error):
 @app.template_filter('acc')
 def acc_format(value):
     return format(float(value), '.2%')
+
+@app.template_filter('star')
+def acc_format(value):
+    return format(float(value), '.3')
 
 @app.template_filter('integer')
 def int_format(value):

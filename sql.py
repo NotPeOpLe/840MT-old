@@ -16,12 +16,12 @@ conn = pymysql.connect(
 c = conn.cursor()
 
 def get_count():
-    data = {}
-    c.execute("SELECT * FROM sqlite_sequence")
-    row = c.fetchall() 
-    for d in row:
-        data[d[0]] = d[1]
-    return data
+    c.execute("select (select count(*) from beatmaps),\
+    (select count(*) from users),\
+    (select count(*) from scores)")
+    
+    row = c.fetchone()
+    return [row[0],row[1],row[2]]
     
 def get_beatmaps_list():
     beatmap_list = []
