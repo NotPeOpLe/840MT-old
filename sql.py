@@ -99,7 +99,21 @@ def get_beatmapset(setid: int):
     c.execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
     row = c.fetchall() 
     for m in row:
-        mapid.append([m[0],m[1],m[2]])
+        diff_color = "secondary"
+        if m[2] < 2:
+            diff_color = "success"
+        elif m[2] < 2.7:
+            diff_color = "info"
+        elif m[2] < 4:
+            diff_color = "warning"
+        elif m[2] < 5.3:
+            diff_color = "danger"
+        elif m[2] < 6.5:
+            diff_color = "primary"
+        elif m[2] > 6.5:
+            diff_color = "dark"
+
+        mapid.append([m[0],m[1],m[2],diff_color])
     data['mapids'] = mapid
     return data
 
