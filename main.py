@@ -15,7 +15,7 @@ app.register_blueprint(LocalAPI,url_prefix='/api')
 @app.route('/')
 def index():
     # count 是簡單統計報名玩家、成績上船的數量
-    return render_template('index.html',count=sql.get_count())
+    return render_template('index.html')
 
 # 調試用
 @app.route('/test')
@@ -31,10 +31,8 @@ def register():
 # Oauth回傳用
 @app.route('/callback', methods=['GET'])
 def callback():
-    if request.args['error']:
-        return redirect(url_for('bad'))
-    u = OsuAPI.get_token(request.args['code'])
     if request.args['state'] == 'register':
+        u = OsuAPI.get_token(request.args['code'])
         user = OsuAPI.get_user(u['access_token'])
         try:
             sql.import_user(user,u['access_token'],u['refresh_token'])
@@ -43,11 +41,11 @@ def callback():
         else:
             return redirect(url_for('ok'))
 
-@app.route('/ok/')
+@app.route('/ok')
 def ok():
     return "<h1>Ok!</h1>"
     
-@app.route('/bad/')
+@app.route('/bad')
 def bad():
     return "<h1>No!</h1>"
 
@@ -84,11 +82,11 @@ def page_not_found(error):
 
 @app.errorhandler(500)
 def special_exception_handler(error):
-    return render_template('error.html',errmsg='你好，我是500!'), 404
+    return render_template('error.html',errmsg='你好，我是500!'), 500
 
 @app.errorhandler(400)
 def bad_request(error):
-    return render_template('error.html',errmsg='你好，我是400!'), 404
+    return render_template('error.html',errmsg='你好，我是400!'), 400
 
 # 過濾器
 @app.template_filter('acc')
@@ -98,11 +96,6 @@ def acc_format(value):
 @app.template_filter('integer')
 def int_format(value):
     return format(int(value), ',')
-
-@app.template_filter('mods')
-def mods_format(vaule):
-    m = mods.formatMods(vaule)
-    return '<img >'
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-import sqlite3
+import pymysql
 import requests
 import config
 import json
@@ -6,33 +6,42 @@ import OsuAPI
 import time
 import mods
 
-conn = sqlite3.connect("data.db", check_same_thread=False)
+conn = pymysql.connect(
+    host="192.168.1.108",
+    port=3306,
+    user="mt",
+    passwd="Wr9FmDw4",
+    database="840MT",
+    charset="utf8"
+)
 c = conn.cursor()
 
 def get_count():
     data = {}
-    sql_data = c.execute("SELECT * FROM sqlite_sequence")
-    for d in sql_data:
+    c.execute("SELECT * FROM sqlite_sequence")
+    row = c.fetchall() 
+    for d in row:
         data[d[0]] = d[1]
     return data
     
 def get_beatmaps_list():
     beatmap_list = []
-    sql_data = c.execute("SELECT beatmap_id FROM beatmaps")
-    for bid in sql_data:
+    c.execute("SELECT beatmap_id FROM beatmaps")
+    row = c.fetchall() 
+    for bid in row:
         beatmap_list.append(int(bid[0]))
     return beatmap_list
 
 def get_maps():
     data = []
-    sql_data = c.execute("""
+    c.execute("""
         SELECT beatmapset_id,artist,title,creator,count(beatmapset_id) AS count_map, MAX(difficultyrating) AS maindiff,beatmap_id
         FROM beatmaps 
         GROUP BY beatmapset_id 
         ORDER BY beatmapset_id
         """)
-
-    for item in sql_data:
+    row = c.fetchall() 
+    for item in row:
         d = {
             'beatmapset_id': item[0],
             'artist': item[1],
@@ -47,8 +56,9 @@ def get_maps():
 
 def get_beatmap(mapid: int):
     data = {}
-    sql_data = c.execute('SELECT * FROM beatmaps WHERE beatmap_id = %d' % mapid)
-    for d in sql_data:
+    c.execute('SELECT * FROM beatmaps WHERE beatmap_id = %d' % mapid)
+    row = c.fetchall() 
+    for d in row:
         data = {
             'beatmapset_id': d[0],
             'beatmap_id': d[1],
@@ -93,23 +103,26 @@ def get_beatmapset(setid: int):
     return data
 
 def get_all_users():
-    sql_data = c.execute("SELECT user_id, username FROM users")
+    c.execute("SELECT user_id, username FROM users")
+    row = c.fetchall() 
     user_list = []
-    for uid in sql_data:
+    for uid in row:
         user_list.append(uid)
     return user_list
 
 def get_user(user_id=0,username=''):
-    sql_data = c.execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
-    for d in sql_data:
+    c.execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
+    row = c.fetchall() 
+    for d in row:
         user = OsuAPI.get_user(d[3])
     return user
 
 def get_user_old(user_id=0):
     data = {}
-    sql_data = c.execute(f"SELECT * FROM users WHERE user_id={user_id}")
+    c.execute(f"SELECT * FROM users WHERE user_id={user_id}")
+    row = c.fetchall() 
 
-    for d in sql_data:
+    for d in row:
         data['user_id'] = d[0]
         data['username'] = d[1]
         data['country'] = d[2]
@@ -118,11 +131,13 @@ def get_user_old(user_id=0):
 def get_scores(user_id: int):
     data = []
     if user_id == -1:
-        sql_data = c.execute(f"SELECT * FROM scores")
+        c.execute(f"SELECT * FROM scores")
+        row = c.fetchall() 
     else:
-        sql_data = c.execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC")
+        c.execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC")
+        row = c.fetchall() 
 
-    for s in sql_data:
+    for s in row:
         d = {
             "beatmap_id": s[0],
             "score": s[1],
@@ -138,19 +153,19 @@ def get_scores(user_id: int):
             "user_id": s[11],
             "date": s[12],
             "rank": s[13],
-            "accuracy": s[14],
-            "id": s[15],
+            "accuracy": s[14]
         }
         data.append(d)
     return data
 
 def get_ranking():
     data = []
-    sql_data = c.execute('''SELECT RANK() OVER(ORDER BY B.rank_score DESC), A.*, B.rank_score, B.SS, B.S, B.A
+    c.execute('''SELECT RANK() OVER(ORDER BY B.rank_score DESC), A.*, B.rank_score, B.SS, B.S, B.A 
                     FROM ranking_statistics1 A
                     LEFT JOIN ranking_statistics2 B
                     ON A.user_id = B.user_id''')
-    for s in sql_data:
+    row = c.fetchall()
+    for s in row:
         d = {
             "rank": s[0],
             "user_id": s[1],
@@ -169,10 +184,10 @@ def get_ranking():
 
 def get_beatmap_ranking(map_id: int):
     data = []
-    sql_data = c.execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, MAX(S.score), S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id  
+    c.execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, MAX(S.score), S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id  
                 FROM scores AS S, users AS U WHERE S.user_id=U.user_id AND S.beatmap_id = {map_id} GROUP BY U.user_id ORDER BY S.score DESC''')
-
-    for s in sql_data:
+    row = c.fetchall()
+    for s in row:
         d = {
             "ranking": s[0],
             "rank": s[1],
@@ -251,13 +266,14 @@ def import_user(user,access_token='',refresh_token=''):
     imp_u = []
     imp_u.append(user['id'])
     imp_u.append(user['username'])
-    imp_u.append(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    imp_u.append(user['country_code'])
     imp_u.append(access_token)
     imp_u.append(refresh_token)
+    imp_u.append(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
     str_u = str(imp_u)[1:-1]
 
-    c.execute(f"INSERT INTO users (user_id,username,join_date,access_token,refresh_token) \
+    c.execute(f"INSERT INTO users (user_id,username,country,access_token,refresh_token,join_date) \
         VALUES ({str_u})")
     
     print("register {} {}".format(user['id'],user['username']))
@@ -284,22 +300,7 @@ def submit_score(score):
 
     str_s = str(imp_s)[1:-1]
 
-    c.execute(f"INSERT INTO scores (beatmap_id,score,maxcombo,count50,count100,count300,countmiss,countkatu,countgeki,perfect,enabled_mods,user_id,date,rank,accuracy) \
-        VALUES ({str_s})")
-    conn.commit()
-    
-    print(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")
-
-def submit_score_test(score):
-    imp_s = list(score.values())
-    print(imp_s)
-    acc = (int(score['count50'])*50 + int(score['count100'])*100 + int(score['count300'])*300) / ((int(score['count50']) + int(score['count100']) + int(score['count300']) + int(score['countmiss']))*300)
-    imp_s.append(float(acc))
-
-    str_s = str(imp_s)[1:-1]
-
-    c.execute(f"INSERT INTO scores_test (beatmap_id,score,maxcombo,count50,count100,count300,countmiss,countkatu,countgeki,perfect,enabled_mods,user_id,date,rank,accuracy) \
-        VALUES ({str_s})")
+    c.execute(f"INSERT INTO scores VALUES ({str_s})")
     conn.commit()
     
     print(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")

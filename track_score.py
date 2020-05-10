@@ -10,7 +10,7 @@ l.basicConfig(
 )
 l.FileHandler('track_score.log','a','UTF-8')
 
-player_list = r.get('http://127.0.0.1/api/users/-1').json()
+player_list = r.get('http://127.0.0.1/api/users/').json()
 l.info('載入 {} 位玩家'.format(len(player_list)))
 
 beatmap_list = r.get('http://127.0.0.1/api/maps').json()
@@ -30,7 +30,7 @@ def check_score(user_id,score,sql_scores):
         return False
 
 while True:
-    users = r.get('http://127.0.0.1/api/userlist').json()
+    users = r.get('http://127.0.0.1/api/users/').json()
     
     if users != player_list:
         new_players = []
@@ -43,12 +43,12 @@ while True:
     
     for user in users:
         l.info('讀取 {} 的遊玩紀錄'.format(user[1]))
-        sql_scores = r.get(f'http://127.0.0.1/api/scores?u={user[0]}').json()
+        sql_scores = r.get(f'http://127.0.0.1/api/users/{user[0]}/scores').json()
         try:
             scores = get_user_recent(user[0])
             for score in scores:
                 if check_score(user[0],score,sql_scores):
-                    r.post('http://127.0.0.1/api/scores',params=score)
+                    r.post(f'http://127.0.0.1/api/users/{user[0]}/scores',params=score)
         except: 
             l.exception()
         sleep(2)
