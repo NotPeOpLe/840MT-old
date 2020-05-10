@@ -20,28 +20,6 @@ def users_all():
 def users(user_id):
     return jsonify(OsuAPI.get_old_user(user_id))
 
-@LocalAPI.route('/users/<int:user_id>/scores', methods=['POST', 'GET'])
+@LocalAPI.route('/users/<int:user_id>/scores')
 def users_scores(user_id):
-    if request.method == 'POST': # 上傳分數
-        score = {
-            "beatmap_id": request.args['beatmap_id'],
-            "score": request.args['score'],
-            "maxcombo": request.args['maxcombo'],
-            "count50": request.args['count50'],
-            "count100": request.args['count100'],
-            "count300": request.args['count300'],
-            "countmiss": request.args['countmiss'],
-            "countkatu": request.args['countkatu'],
-            "countgeki": request.args['countgeki'],
-            "perfect": request.args['perfect'],
-            "enabled_mods": request.args['enabled_mods'],
-            "user_id": request.args['user_id'],
-            "date": request.args['date'],
-            "rank": request.args['rank'],
-        }
-        sql.submit_score(score)
-        sql.submit_score_test(score)
-        return score
-
-    elif request.method == 'GET': # 取得分數
-        return jsonify(sql.get_scores(user_id))
+    return jsonify(sql.get_scores(user_id))
