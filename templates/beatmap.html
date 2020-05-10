@@ -11,7 +11,7 @@
 </section>
 <section class="ftco-section">
     <div class="container">
-        <h4>{{mapset['version']}}</h4>
+        <h5>{{beatmap['version']}}</h5>
         <h1>{{mapset['title']}}</h1>
         <h4>{{mapset['artist']}}</h3>
     </div>
@@ -23,7 +23,7 @@
 				<tr>
 					<th class="text-center">#</th>
 					<th class="text-center">評價</th>
-					<th class="text-center">得分</th>
+					<th class="text-left">得分</th>
 					<th class="text-left">準確率</th>
 					<th class="text-left">玩家</th>
 					<th class="text-left">最大連擊</th>
@@ -39,10 +39,10 @@
 				<tr>
 					<td class="text-center">{{data['ranking']}}</th>
 					<td class="text-center"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ data['rank'] }}.svg"></th>
-					<td class="text-center">{{data['score'] | integer}}</th>
+					<td class="text-left">{{data['score'] | integer}}</th>
 					<td class="text-left">{{data['accuracy'] | acc}}</th>
 					<td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ data['country'] }}.png" width=24><a href="/players/{{ data['user_id'] }}/"> {{ data['username'] }}<a></th>
-					<td class="text-left">{{data['maxcombo']| integer}}</th>
+					<td class="text-left">{{data['maxcombo']| integer}}x</th>
 					<td class="text-left">{{data['count300']| integer}}</th>
 					<td class="text-left">{{data['count100']| integer}}</th>
 					<td class="text-left">{{data['count50']| integer}}</th>
