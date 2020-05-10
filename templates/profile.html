@@ -26,8 +26,8 @@
                     <th class="text-left">圖ID</th>
                     <th class="text-left">分數</th>
                     <th class="text-left">準確率</th>
-                    <th class="text-left">rank</th>
-                    <th class="text-left">maxcombo</th>
+                    <th class="text-left">評價</th>
+                    <th class="text-left">最大連擊</th>
                     <th class="text-left">300</th>
                     <th class="text-left">100</th>
                     <th class="text-left">50</th>
@@ -39,10 +39,10 @@
             <tbody>
                 {% for score in scores %}
                 <tr>
-                    <td class="text-left">{{ score['beatmap_id'] }}</td>
+                    <td class="text-left"><a href="/maps/{{ score['beatmap_id'] }}">{{ score['beatmap_id'] }}</a></td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
                     <td class="text-left">{{ score['score']    | integer }}</td>
                     <td class="text-left">{{ score['accuracy'] | acc }}</td>
-                    <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
                     <td class="text-left">{{ score['maxcombo'] | integer }}</td>
                     <td class="text-left">{{ score['count300'] | integer }}</td>
                     <td class="text-left">{{ score['count100'] | integer }}</td>
