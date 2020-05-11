@@ -7,7 +7,7 @@ import mods
 from LocalAPI import LocalAPI
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
 app.register_blueprint(LocalAPI,url_prefix='/api') 
 
@@ -103,4 +103,4 @@ def int_format(value):
 
 
 if __name__ == '__main__':
-    app.run(port=80)
+    app.run(host='0.0.0.0',port=80,ssl_context='adhoc')

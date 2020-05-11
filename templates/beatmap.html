@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 {% block title %}圖譜{% endblock %}
-{% block bg %}https://assets.ppy.sh/beatmaps/{{mapset['beatmapset_id']}}/covers/cover.jpg{% endblock %}
+{% block bg %}{% endblock %}
+{% block background %}
+<section class="hero-wrap img" style="background-image: url('https://assets.ppy.sh/beatmaps/{{mapset['beatmapset_id']}}/covers/cover.jpg'); height: 300px;">
+  <div class="overlay"></div>
+  	<div class="container">
+  		<div class="row description align-items-left justify-content-left">
+  			<div class="col-md-12">
+  				<div class="hero-wrap text">
+  					<div style='height:140px;'></div>
+  					<a style='color:#fff;'>{{beatmap['version']}}</a>
+            		<h2 style='color:#fff;'>{{mapset['title']}}</h4>
+					<h6 style='color:#fff;'>{{mapset['artist']}}</h6>
+  		  	</div>
+			<div class="container text-right">
+				<a href="https://osu.ppy.sh/b/{{beatmap['beatmap_id']}}" class="btn btn-light">官方連結</a>
+				<a href="https://osu.ppy.sh/d/{{beatmap['beatmapset_id']}}" class="btn btn-light">下載圖譜</a>
+				<a href="https://bloodcat.com/osu/s/{{beatmap['beatmapset_id']}}" class="btn btn-light">Blood Cat</a>
+			</div>
+  	    </div>
+  	  </div>
+    </div>
+</section>
+{% endblock %}
 {% block content %}
 <section class="ftco-section bg-light">
     <div class="container">
@@ -9,16 +31,9 @@
         {% endfor %}
     </div>
 </section>
-<section class="ftco-section">
-    <div class="container">
-        <h5>{{beatmap['version']}}</h5>
-        <h1>{{mapset['title']}}</h1>
-        <h4>{{mapset['artist']}}</h3>
-    </div>
-</section>
 <section div class="ftco-section">
 	<div class="container table-responsive-lg">
-		<table class="table table-sm table-striped table-hover">
+		<table class="table table-sm table-responsive-md table-striped table-hover h6 container" style="width:90%">
 			<thead class="thead-light">
 				<tr>
 					<th class="text-center">#</th>

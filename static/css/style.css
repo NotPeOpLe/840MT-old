@@ -11746,21 +11746,6 @@ a:focus {
   text-decoration: none !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5 {
-  line-height: 1.4;
-  color: #3c4858;
-  font-weight: 300;
-}
-
 .ftco-section {
   padding: 1em 0;
 }
@@ -11888,17 +11873,6 @@ h5,
 .btn.btn-dark.btn-link {
   color: #343a40;
   background: transparent;
-}
-
-.btn.btn-outline-primary {
-  color: #6b48ff;
-  border: 1px solid #6b48ff;
-}
-
-.btn.btn-outline-primary:hover,
-.btn.btn-outline-primary:focus {
-  color: #fff;
-  background: #6b48ff;
 }
 
 .btn.btn-outline-success:hover,
@@ -13380,4 +13354,8 @@ h5,
 
 .mods {
   width: 24px;
+}
+
+td img {
+  margin-bottom: 3px;
 }
