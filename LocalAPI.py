@@ -20,7 +20,7 @@ def users_all():
 def users(user_id):
     return jsonify(OsuAPI.get_old_user(user_id))
 
-@LocalAPI.route('/users/<int:user_id>/scores', methods=['POST', 'GET'])
+@LocalAPI.route('/users/<int:user_id>/scores')
 def users_scores(user_id):
     if request.method == 'POST': # 上傳分數
         score = {
