@@ -132,3 +132,5 @@ data.db
 840.gg.pem
 840.gg.key
 840.gg.crt
+sql/beatmap_ranking.sql
+sql/beatmap_ranking2.sql
