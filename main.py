@@ -94,7 +94,7 @@ def acc_format(value):
     return format(float(value), '.2%')
 
 @app.template_filter('star')
-def acc_format(value):
+def diff_format(value):
     return format(float(value), '.3')
 
 @app.template_filter('integer')
