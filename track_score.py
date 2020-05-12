@@ -1,6 +1,6 @@
 from OsuAPI import get_user_recent
 from time import sleep, strptime, mktime
-from sql import get_scores, submit_score, get_all_users, get_beatmaps_list
+import ddwda
 import requests as r
 import logging as l
 
@@ -11,10 +11,10 @@ l.basicConfig(
 )
 l.FileHandler('track_score.log','a','UTF-8')
 
-player_list = get_all_users()
+player_list = ddwda.get_all_users()
 l.info('載入 {} 位玩家'.format(len(player_list)))
 
-beatmap_list = get_beatmaps_list()
+beatmap_list = ddwda.get_beatmaps_list()
 l.info('載入 {} 張圖譜'.format(len(beatmap_list)))
 
 def check_score(user_id,score,sql_scores):
@@ -31,25 +31,25 @@ def check_score(user_id,score,sql_scores):
         return False
 
 while True:
-    users = get_all_users()
-    
-    if users != player_list:
-        new_players = []
-        for user in users:
-            if user not in player_list:
-                new_players.append(user)
-                player_list.append(user)
-        for user in new_players:
-            l.info('新玩家: ', user[1])
+    users = None
+    users = ddwda.get_all_users()
+    # if users != player_list:
+    #     new_players = []
+    #     for user in users:
+    #         if user not in player_list:
+    #             new_players.append(user)
+    #             player_list.append(user)
+    #     for user in new_players:
+    #         l.info('新玩家: ', user[1])
     
     for user in users:
         l.info('讀取 {} 的遊玩紀錄'.format(user[1]))
-        sql_scores = get_scores(user[0])
+        sql_scores = ddwda.get_scores(user[0])
         try:
             scores = get_user_recent(user[0])
             for score in scores:
                 if check_score(user[0],score,sql_scores):
-                    submit_score(score)
+                    ddwda.submit_score(score)
         except: 
             l.exception()
         sleep(2)
