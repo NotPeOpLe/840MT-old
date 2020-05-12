@@ -39,9 +39,12 @@ def callback():
         try:
             sql.import_user(user,u['access_token'],u['refresh_token'])
         except:
-            return redirect(url_for('bad'))
+            if user['id'] in sql.get_all_users('id'):
+                return redirect(url_for('profile',user_id=user['id']))
+            else:
+                return redirect(url_for('bad'))
         else:
-            return redirect(url_for('ok'))
+            return redirect(url_for('profile',user_id=user['id']))
 
 @app.route('/ok')
 def ok():

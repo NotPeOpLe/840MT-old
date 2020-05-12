@@ -122,16 +122,34 @@ def get_beatmapset(setid: int):
     data['mapids'] = mapid
     return data
 
-def get_all_users():
-    c.execute("SELECT user_id, username FROM users")
-    conn.commit()
-    row = c.fetchall() 
+def get_all_users(req=None):
     user_list = []
-    for uid in row:
-        user_list.append(uid)
-    return user_list
+    if req == 'id':
+        c.execute("SELECT user_id FROM users")
+        conn.commit()
+        row = c.fetchall()
 
-def get_user(user_id=0,username=''):
+        for uid in row:
+            user_list.append(uid[0])
+        return user_list
+    elif req == 'name':
+        c.execute("SELECT username FROM users")
+        conn.commit()
+        row = c.fetchall()
+
+        for uid in row:
+            user_list.append(uid[0])
+        return user_list
+    else:
+        c.execute("SELECT user_id, username FROM users")
+        conn.commit()
+        row = c.fetchall()
+
+        for uid in row:
+            user_list.append(uid)
+        return user_list
+
+def get_user(user_id):
     c.execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
     conn.commit()
     row = c.fetchall() 
