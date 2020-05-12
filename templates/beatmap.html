@@ -26,6 +26,9 @@
 {% block content %}
 <section class="ftco-section bg-light">
     <div class="container">
+		<div class="alert alert-warning" role="alert">
+			目前發現圖譜排名沒有正常顯示，現在正在維修中!
+		</div>
         {% for diff in mapset['mapids'] %}
 		<a class="btn btn-{{diff[3]}} {% if diff[1] == beatmap['version'] %}active{% endif %}" href="/maps/{{diff[0]}}" role="button" style="margin-bottom: 4px;">{{diff[1]}} [{{diff[2] | star}}★]</a>
         {% endfor %}
