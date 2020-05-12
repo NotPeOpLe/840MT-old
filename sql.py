@@ -200,7 +200,7 @@ def get_ranking():
 def get_beatmap_ranking(map_id: int):
     data = []
     c.execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, S.score, S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id  
-                FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id) AND S.beatmap_id = {map_id} GROUP BY U.user_id ORDER BY S.score DESC''')
+                FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id}) GROUP BY U.user_id ORDER BY S.score DESC''')
     row = c.fetchall()
     for s in row:
         d = {
