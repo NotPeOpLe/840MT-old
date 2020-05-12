@@ -7,6 +7,8 @@ import mods
 from LocalAPI import LocalAPI
 
 app = Flask(__name__)
+app.config['ENV'] = 'development'
+
 app.debug = False
 app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
 app.register_blueprint(LocalAPI,url_prefix='/api') 
