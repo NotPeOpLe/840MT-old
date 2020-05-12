@@ -19,13 +19,14 @@ def get_count():
     c.execute("select (select count(*) from beatmaps),\
     (select count(*) from users),\
     (select count(*) from scores)")
-    
+    conn.commit()
     row = c.fetchone()
     return [row[0],row[1],row[2]]
     
 def get_beatmaps_list():
     beatmap_list = []
     c.execute("SELECT beatmap_id FROM beatmaps")
+    conn.commit()
     row = c.fetchall() 
     for bid in row:
         beatmap_list.append(int(bid[0]))
@@ -39,6 +40,7 @@ def get_maps():
         GROUP BY beatmapset_id 
         ORDER BY beatmapset_id
         """)
+    conn.commit()
     row = c.fetchall() 
     for item in row:
         d = {
@@ -56,6 +58,7 @@ def get_maps():
 def get_beatmap(mapid: int):
     data = {}
     c.execute('SELECT * FROM beatmaps WHERE beatmap_id = %d' % mapid)
+    conn.commit()
     row = c.fetchall() 
     for d in row:
         data = {
@@ -86,6 +89,7 @@ def get_beatmapset(setid: int):
     data = {}
     mapid = []
     c.execute('SELECT beatmapset_id, artist, artist_unicode, title, title_unicode, creator FROM beatmaps WHERE beatmapset_id = %d LIMIT 1' % setid)
+    conn.commit()
     row = c.fetchall() 
     for d in row:
         data = {
@@ -97,6 +101,7 @@ def get_beatmapset(setid: int):
             "creator": d[5]
         }
     c.execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
+    conn.commit()
     row = c.fetchall() 
     for m in row:
         diff_color = "secondary"
@@ -119,6 +124,7 @@ def get_beatmapset(setid: int):
 
 def get_all_users():
     c.execute("SELECT user_id, username FROM users")
+    conn.commit()
     row = c.fetchall() 
     user_list = []
     for uid in row:
@@ -127,6 +133,7 @@ def get_all_users():
 
 def get_user(user_id=0,username=''):
     c.execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
+    conn.commit()
     row = c.fetchall() 
     for d in row:
         user = OsuAPI.get_user(d[3])
@@ -135,6 +142,7 @@ def get_user(user_id=0,username=''):
 def get_user_old(user_id=0):
     data = {}
     c.execute(f"SELECT * FROM users WHERE user_id={user_id}")
+    conn.commit()
     row = c.fetchall() 
 
     for d in row:
@@ -147,9 +155,11 @@ def get_scores(user_id: int):
     data = []
     if user_id == -1:
         c.execute(f"SELECT * FROM scores")
+        conn.commit()
         row = c.fetchall() 
     else:
         c.execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC")
+        conn.commit()
         row = c.fetchall() 
 
     for s in row:
@@ -179,6 +189,7 @@ def get_ranking():
                     FROM ranking_statistics1 A
                     LEFT JOIN ranking_statistics2 B
                     ON A.user_id = B.user_id''')
+    conn.commit()
     row = c.fetchall()
     for s in row:
         d = {
@@ -201,6 +212,7 @@ def get_beatmap_ranking(map_id: int):
     data = []
     c.execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, S.score, S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id  
                 FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id) AND S.beatmap_id = {map_id} GROUP BY U.user_id ORDER BY S.score DESC''')
+    conn.commit()
     row = c.fetchall()
     for s in row:
         d = {
