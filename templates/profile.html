@@ -1,6 +1,25 @@
-{% extends "base.html" %}
-{% block title %}{{ user['username'] }}的個人頁面{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}{{ user['username'] }}的個人頁面{% endblock %} {% block content %}
+
+<script>
+    function calDate() {
+        var date = document.getElementById('diff').v;
+        var nowTime = new Date().getTime();
+        var playTime = new Date().getTime();
+        var diff = (nowTime - playTime) / 1000;
+
+        if (diff < 60)
+            document.getElementById('diff').innerHTML = date;
+        else if (diff > 60 && diff < 3600)
+            document.getElementById('diff').innerHTML = Math.round(diff / 60) + " minutes ago";
+        else if (diff > 3600 && diff < 86400)
+            document.getElementById('diff').innerHTML = Math.round(diff / 60 / 60) + " hours ago";
+        else
+            document.getElementById('diff').innerHTML = Math.round(diff / 60 / 60 / 24) + " days ago";
+
+
+    }
+</script>
+
 <section class="ftco-section">
     <div class="container">
         <div class="row">
@@ -9,8 +28,7 @@
             </div>
             <div class="col-12 col-md-8">
                 <h1>{{ user['username'] }}</h1>
-                <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country'] }}.png" width=24>  {{ user['country'] }}
-                | <a href="https://osu.ppy.sh/users/{{ user['user_id'] }}">osu!個人頁面<a>
+                <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country'] }}.png" width=24> {{ user['country'] }} | <a href="https://osu.ppy.sh/users/{{ user['user_id'] }}">osu!個人頁面<a>
             </div>
         </div>
     </div>
@@ -23,9 +41,9 @@
             <thead class="thead-light">
                 <tr>
                     <th class="text-left">圖ID</th>
+                    <th class="text-left">評價</th>
                     <th class="text-left">分數</th>
                     <th class="text-left">準確率</th>
-                    <th class="text-left">評價</th>
                     <th class="text-left">最大連擊</th>
                     <th class="text-left">300</th>
                     <th class="text-left">100</th>
@@ -38,21 +56,22 @@
             <tbody>
                 {% for score in scores %}
                 <tr>
-                    <td class="text-left"><a href="/maps/{{ score['beatmap_id'] }}">{{ score['beatmap_id'] }}</a></td>
-                    <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
-                    <td class="text-left">{{ score['score']    | integer }}</td>
-                    <td class="text-left">{{ score['accuracy'] | acc }}</td>
-                    <td class="text-left">{{ score['maxcombo'] | integer }}</td>
-                    <td class="text-left">{{ score['count300'] | integer }}</td>
-                    <td class="text-left">{{ score['count100'] | integer }}</td>
-                    <td class="text-left">{{ score['count50']  | integer }}</td>
-                    <td class="text-left">{{ score['countmiss']| integer }}</td>
-                    <td class="text-left">{% for mod in score['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
-                    <td class="text-left">{{ score['date'] }}</td>
+                <td class="text-left"><a href="/maps/{{ score['beatmap_id'] }}">{{ score['beatmap_id'] }}</a></td>
+                <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
+                <td class="text-left">{{ score['score'] | integer }}</td>
+                <td class="text-left">{{ score['accuracy'] | acc }}</td>
+                <td class="text-left">{{ score['maxcombo'] | integer }}</td>
+                <td class="text-left">{{ score['count300'] | integer }}</td>
+                <td class="text-left">{{ score['count100'] | integer }}</td>
+                <td class="text-left">{{ score['count50'] | integer }}</td>
+                <td class="text-left">{{ score['countmiss']| integer }}</td>
+                <td class="text-left">{% for mod in score['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
+                <td class="text-left">{{ score['date'] }}</td>
                 </tr>
+                </body>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+                </table>
+            </div>
 </section>
 {% endblock %}
