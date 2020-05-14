@@ -8,6 +8,8 @@ from LocalAPI import LocalAPI
 
 app = Flask(__name__)
 app.config['ENV'] = 'development'
+app.config['TEMPLATES_AUTO_RELOAD'] = True      
+app.jinja_env.auto_reload = True
 
 app.debug = False
 app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
@@ -43,8 +45,8 @@ def callback():
                 return redirect(url_for('profile',user_id=user['id']))
             else:
                 return redirect(url_for('bad'))
-        else:
-            return redirect(url_for('profile',user_id=user['id']))
+    else:
+        return redirect(url_for('profile',user_id=user['id']))
 
 @app.route('/ok')
 def ok():
