@@ -51,8 +51,8 @@ while True:
                 if check_score(user[0],score,sql_scores):
                     ddwda.submit_score(score)
         except: 
-            l.exception()
-        sleep(2)
+            pass
+        sleep(1.5)
     
     l.info('追蹤完成，10秒後繼續追蹤...')
     sleep(10)
