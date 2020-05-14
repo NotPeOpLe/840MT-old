@@ -3,8 +3,9 @@
 {% block content %}
 <section class="ftco-section">
     <div class="container">
-        <div class="h1 col-12 text-center">參賽名單</div>
-        <div class="row">
+        <h1 class="text-center">參賽名單</h1>
+        <p class="text-center">總計 {{users|count}} 位玩家</p>
+        <div class="row container">
             {% for user in users %}
             <a href="/players/{{user[0]}}/">
             <div class="card block text-center">
