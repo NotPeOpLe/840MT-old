@@ -236,7 +236,7 @@ def get_ranking():
 
 def get_beatmap_ranking(map_id: int):
     data = []
-    execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, S.score, S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id  
+    execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, S.score, S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id, S.date  
                 FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id}) GROUP BY U.user_id ORDER BY S.score DESC''')
     
     row = c.fetchall()
@@ -254,7 +254,8 @@ def get_beatmap_ranking(map_id: int):
             "count50": s[9],
             "countmiss": s[10],
             "enabled_mods": mods.formatMods(s[11]),
-            "user_id": s[12]
+            "user_id": s[12],
+            "date": s[13]
         }
         data.append(d)
 

@@ -47,6 +47,7 @@
 					<th class="text-left">50</th>
 					<th class="text-left">MISS</th>
 					<th class="text-left">MODS</th>
+					<th class="text-left">遊玩時間</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -63,6 +64,7 @@
 					<td class="text-left">{{data['count50']| integer}}</th>
 					<td class="text-left">{{data['countmiss']| integer}}</th>
 					<td class="text-left">{% for mod in data['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</th>
+					<td class="text-left" data-toggle="tooltip" data-placement="top" title="{{ data['date'] }}">{{ data['date'] | date }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
