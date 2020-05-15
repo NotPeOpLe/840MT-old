@@ -6,10 +6,10 @@ import logging as l
 
 l.basicConfig(
     format='(%(asctime)s) [%(levelname)s]: %(message)s',
-    level=l.INFO,
+    level=l.DEBUG,
     datefmt='%Y-%m-%d %H:%M:%S'
 )
-l.FileHandler('track_score.log','a','UTF-8')
+#l.FileHandler('track_score.log','a','UTF-8')
 
 player_list = ddwda.get_all_users()
 l.info('載入 {} 位玩家'.format(len(player_list)))
@@ -50,7 +50,7 @@ while True:
             for score in scores:
                 if check_score(user[0],score,sql_scores):
                     ddwda.submit_score(score)
-        except: 
+        except:
             pass
         sleep(1.5)
     
