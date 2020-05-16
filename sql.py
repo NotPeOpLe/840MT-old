@@ -17,11 +17,13 @@ c = conn.cursor()
 
 def execute(value):
     conn.ping(reconnect=True)
-    try:
-        c.execute(value)
-        conn.commit()
-    except Exception:
-        conn.rollback()
+    c.execute(value)
+    conn.commit()
+    # try:
+    #     c.execute(value)
+    #     conn.commit()
+    # except Exception:
+    #     conn.rollback()
 
 def get_count():
     execute("select (select count(*) from beatmaps),\
@@ -317,6 +319,7 @@ def import_beatmap_sql(b):
 
 
 def import_user(user,access_token='',refresh_token=''):
+    execute(f"SELECT user_id FROM users WHERE user_id")
     imp_u = []
     imp_u.append(user['id'])
     imp_u.append(user['username'])

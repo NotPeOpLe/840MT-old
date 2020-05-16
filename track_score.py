@@ -45,14 +45,11 @@ while True:
     for user in users:
         l.info('讀取 {} 的遊玩紀錄'.format(user[1]))
         sql_scores = ddwda.get_scores(user[0])
-        try:
-            scores = get_user_recent(user[0])
-            for score in scores:
-                if check_score(user[0],score,sql_scores):
-                    ddwda.submit_score(score)
-        except:
-            pass
-        sleep(1.5)
+        scores = get_user_recent(user[0])
+        for score in scores:
+            if check_score(user[0],score,sql_scores):
+                ddwda.submit_score(score)
+        sleep(1)
     
     l.info('追蹤完成，10秒後繼續追蹤...')
     sleep(10)

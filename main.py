@@ -13,7 +13,7 @@ app.config['ENV'] = 'development'
 app.config['TEMPLATES_AUTO_RELOAD'] = True      
 app.jinja_env.auto_reload = True
 
-app.debug = False
+# app.debug = True
 app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
 app.register_blueprint(LocalAPI,url_prefix='/api') 
 
