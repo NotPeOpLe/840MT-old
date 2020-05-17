@@ -365,3 +365,6 @@ def submit_score(score):
 # select * from scores where beatmap_id=1482745 group by user_id order by score desc
 
 # select RANK() OVER(order by score desc) as rank,* from scores where beatmap_id=1482745 group by user_id  
+
+def close():
+    conn.close()
