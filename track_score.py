@@ -1,7 +1,7 @@
 from OsuAPI import get_user_recent
 from time import sleep, strptime, mktime
 import ddwda
-import requests as r
+import requests
 import logging as l
 
 l.basicConfig(
@@ -26,16 +26,29 @@ def check_score(user_id, score, sql_scores):
     else:
         return False
 
-users = None
-users = ddwda.get_all_users()
+def get_recent(user_id):
+    i = 0
+    while i < 3:
+        try:
+            r = get_user_recent(user_id)
+            return r
+        except requests.exceptions.RequestException:
+            i += 1
 
-for user in users:
-    l.info('讀取 {} 的遊玩紀錄'.format(user[1]))
-    sql_scores = ddwda.get_scores(user[0])
-    scores = get_user_recent(user[0])
-    for score in scores:
-        if check_score(user[0], score, sql_scores):
-            ddwda.submit_score(score)
-    sleep(1)
+while True:
+    users = None
+    users = ddwda.get_all_users()
+
+    for user in users:
+        l.info('讀取 {} 的遊玩紀錄'.format(user[1]))
+        sql_scores = ddwda.get_scores(user[0])
+        try:
+            scores = get_recent(user[0])
+        except Exception as e:
+            pass
+        for score in scores:
+            if check_score(user[0], score, sql_scores):
+                ddwda.submit_score(score)
+        sleep(0.5)
 
 ddwda.close()

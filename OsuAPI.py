@@ -45,7 +45,7 @@ def get_beatmapset(set_id):
 def get_user_recent(user_id):
     url = urlv1 + "get_user_recent"
     params = f"k={config.API_KEY}&u={user_id}&limit=50&m=0&type=id"
-    r = requests.get(url, params)
+    r = requests.get(url, params, timeout=5)
     return r.json()
 
 def get_old_user(user_id):
