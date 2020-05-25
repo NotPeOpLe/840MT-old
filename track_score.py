@@ -44,7 +44,7 @@ while True:
         sql_scores = ddwda.get_scores(user[0])
         try:
             scores = get_recent(user[0])
-        except Exception as e:
+        except requests.RequestException as e:
             pass
         for score in scores:
             if check_score(user[0], score, sql_scores):
