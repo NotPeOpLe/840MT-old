@@ -188,7 +188,6 @@ def get_user_old(user_id=0):
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
         select (select count(*) from a) as 'played map'")
     row = c.fetchone() 
-    print(row[0])
     data['played_maps'] = row[0]
     return data
 
