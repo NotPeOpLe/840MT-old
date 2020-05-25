@@ -160,11 +160,18 @@ def get_all_users(req=None):
         return user_list
 
 def get_user(user_id):
-    execute(f"SELECT * FROM new_users WHERE user_id={user_id}")
-    
+    execute(f"SELECT * FROM users WHERE user_id={user_id}")
     row = c.fetchall() 
+
+    user = None
     for d in row:
         user = OsuAPI.get_user(d[3])
+
+    execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
+        select (select count(*) from a) as 'played map'")
+    row = c.fetchone() 
+
+    user['played map'] = row
     return user
 
 def get_user_old(user_id=0):
@@ -177,6 +184,12 @@ def get_user_old(user_id=0):
         data['user_id'] = d[0]
         data['username'] = d[1]
         data['country'] = d[2]
+
+    execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
+        select (select count(*) from a) as 'played map'")
+    row = c.fetchone() 
+    print(row[0])
+    data['played_maps'] = row[0]
     return data
 
 def get_scores(user_id: int):
