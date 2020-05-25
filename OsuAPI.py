@@ -1,6 +1,7 @@
 import requests
 import json
 import config
+from bs4 import BeautifulSoup
 
 urlv1 = "https://osu.ppy.sh/api/"
 urlv2 = "https://osu.ppy.sh/api/v2/"
@@ -22,13 +23,19 @@ def get_token(code):
     r = requests.request("POST", url, headers = headers, data = payload)
     return r.json()
 
-def get_user(token):
+def get_user(token: str):
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {token}"
     }
     r = requests.get(urlv2+"me/osu", headers = headers)
     return r.json()
+
+def get_user(user_id: int):
+    re = requests.get('https://osu.ppy.sh/users/6008293')
+    soup = BeautifulSoup(re.text, 'html.parser')
+    o = json.loads(soup.html.find(id='json-user').string.strip('\n').strip())
+    return o
 
 def get_beatmap(map_id):
     url = urlv1 + "get_beatmaps"

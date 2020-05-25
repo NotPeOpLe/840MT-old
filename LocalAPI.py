@@ -21,8 +21,8 @@ def users_all():
 
 @LocalAPI.route('/users/<int:user_id>/')
 def users(user_id):
-    apinfo = OsuAPI.get_old_user(user_id)
-    apinfo[0]['played_maps'] = str(sql.get_user_old(user_id)['played_maps'])
+    apinfo = OsuAPI.get_user(user_id)
+    apinfo['played_maps'] = str(sql.get_user_old(user_id)['played_maps'])
     return jsonify(apinfo)
 
 @LocalAPI.route('/users/<int:user_id>/scores')
@@ -33,5 +33,5 @@ def users_scores(user_id):
 def test():
     re = r.get('https://osu.ppy.sh/users/6008293')
     soup = BeautifulSoup(re.text, 'html.parser')
-    o = soup.html.find(id='json-user').string.strip('\n').strip()
+    o = json.loads(soup.html.find(id='json-user').string.strip('\n').strip())
     return jsonify(json.loads(o))
