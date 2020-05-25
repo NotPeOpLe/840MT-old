@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, request, jsonify
 import sql
 import OsuAPI
+import requests as r
+from bs4 import BeautifulSoup
+import json
 
 LocalAPI = Blueprint('LocalAPI',__name__) 
 
@@ -18,8 +21,17 @@ def users_all():
 
 @LocalAPI.route('/users/<int:user_id>/')
 def users(user_id):
-    return jsonify(OsuAPI.get_old_user(user_id))
+    apinfo = OsuAPI.get_old_user(user_id)
+    apinfo[0]['played_maps'] = str(sql.get_user_old(user_id)['played_maps'])
+    return jsonify(apinfo)
 
 @LocalAPI.route('/users/<int:user_id>/scores')
 def users_scores(user_id):
     return jsonify(sql.get_scores(user_id))
+
+@LocalAPI.route('/test/')
+def test():
+    re = r.get('https://osu.ppy.sh/users/6008293')
+    soup = BeautifulSoup(re.text, 'html.parser')
+    o = soup.html.find(id='json-user').string.strip('\n').strip()
+    return jsonify(json.loads(o))
