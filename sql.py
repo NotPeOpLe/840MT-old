@@ -165,13 +165,13 @@ def get_user(user_id):
 
     user = None
     for d in row:
-        user = OsuAPI.get_user(d[3])
+        user = OsuAPI.get_user(d[1])
 
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
         select (select count(*) from a) as 'played map'")
     row = c.fetchone() 
 
-    user['played map'] = row
+    user['played_maps'] = str(row[0])
     return user
 
 def get_user_old(user_id=0):

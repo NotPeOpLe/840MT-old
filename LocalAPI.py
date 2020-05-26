@@ -21,9 +21,7 @@ def users_all():
 
 @LocalAPI.route('/users/<int:user_id>/')
 def users(user_id):
-    apinfo = OsuAPI.get_user(user_id)
-    apinfo['played_maps'] = str(sql.get_user_old(user_id)['played_maps'])
-    return jsonify(apinfo)
+    return jsonify(sql.get_user(user_id))
 
 @LocalAPI.route('/users/<int:user_id>/scores')
 def users_scores(user_id):

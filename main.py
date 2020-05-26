@@ -4,7 +4,7 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect
 import OsuAPI
 import sql
 import mods
-from LocalAPI import LocalAPI
+from LocalAPI import LocalAPI, users
 import datetime
 import time
 
@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config['ENV'] = 'development'
 app.config['TEMPLATES_AUTO_RELOAD'] = True      
 app.jinja_env.auto_reload = True
+app.debug = True
 
 # app.debug = True
 app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
@@ -70,7 +71,7 @@ def players():
 @app.route('/players/<int:user_id>/')
 def profile(user_id):
     scores = sql.get_scores(user_id)
-    user = sql.get_user_old(user_id)
+    user = sql.get_user(user_id)
     return render_template('profile.html', scores=scores, user=user)
 
 @app.route('/maps/')
