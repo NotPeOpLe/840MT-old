@@ -32,7 +32,7 @@ def get_user(token: str):
     return r.json()
 
 def get_user(user_id: int):
-    re = requests.get('https://osu.ppy.sh/users/6008293')
+    re = requests.get(f'https://osu.ppy.sh/users/{user_id}')
     soup = BeautifulSoup(re.text, 'html.parser')
     o = json.loads(soup.html.find(id='json-user').string.strip('\n').strip())
     return o
