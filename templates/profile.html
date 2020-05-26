@@ -5,14 +5,14 @@
 <section class="ftco-section">
     <div class="container">
         <div class="row">
-            <div class="col-5 col-md-2">
+            <div class="col-auto">
                 <img src="https://a.ppy.sh/{{ user['id'] }}" class="rounded img-fluid" width=160>
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col-6">
                 <h1>{{ user['username'] }}</h1>
                 <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country']['code'] }}.png" width=24> {{ user['country']['name'] }} | <a href="https://osu.ppy.sh/users/{{ user['id'] }}">osu!個人頁面</a>
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-auto">
                 完成圖譜數量: {{ user['played_maps'] }}/78
             </div>
         </div>

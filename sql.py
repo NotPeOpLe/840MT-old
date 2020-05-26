@@ -194,11 +194,11 @@ def get_user_old(user_id=0):
 def get_scores(user_id: int):
     data = []
     if user_id == -1:
-        execute(f"SELECT * FROM scores")
+        execute(f"SELECT * FROM scores LIMIT 10")
         
         row = c.fetchall() 
     else:
-        execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC")
+        execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC LIMIT 10")
         
         row = c.fetchall() 
 
