@@ -1,6 +1,6 @@
 # 網頁主程式
 
-from flask import Flask, render_template, jsonify, request, url_for, redirect
+from flask import Flask, render_template, jsonify, request, url_for, redirect, abort
 import OsuAPI
 import sql
 import mods
@@ -68,11 +68,22 @@ def players():
     return render_template('players.html', users=sql.get_all_users())
 
 # 玩家個人頁面
-@app.route('/players/<int:user_id>/')
-def profile(user_id):
+@app.route('/users/<string:username>/')
+def redirect_profile(username: str):
+    user_id = sql.get_userid(username)
+    if user_id is None:
+        abort(404)
+    else:
+        return redirect(url_for('profile', user_id=user_id))
+
+@app.route('/users/<int:user_id>/')
+def profile(user_id: int):
     scores = sql.get_scores(user_id)
     user = sql.get_user(user_id)
-    return render_template('profile.html', scores=scores, user=user)
+    if user is None:
+        abort(404)
+    else:
+        return render_template('profile.html', scores=scores, user=user)
 
 @app.route('/maps/')
 def maps():
