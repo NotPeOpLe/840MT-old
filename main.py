@@ -67,27 +67,26 @@ def ranking():
 def players():
     return render_template('players.html', users=sql.get_all_users())
 
-# 玩家個人頁面
-@app.route('/users/<string:username>/')
-def redirect_profile(username: str):
-    user_id = sql.get_userid(username)
-    if user_id is None:
-        abort(404)
-    else:
-        return redirect(url_for('profile', user_id=user_id))
-
-@app.route('/users/<int:user_id>/')
-def profile(user_id: int):
+@app.route('/users/<user>/')
+def profile(user):
+    try:
+        user_id = int(user)
+    except ValueError:
+        user_id = sql.get_userid(user)
     scores = sql.get_scores(user_id)
-    user = sql.get_user(user_id)
-    if user is None:
-        abort(404)
+    User = sql.get_user(user_id)
+    if User is None:
+        try:
+            user_id = sql.get_userid(user)
+            return redirect(url_for('profile', user = user_id))
+        except:
+            abort(404)
     else:
-        return render_template('profile.html', scores=scores, user=user)
+        return render_template('profile.html', scores = scores, user = User)
 
 @app.route('/maps/')
 def maps():
-    return render_template('maps.html', maps=sql.get_maps(), c=sql.get_count())
+    return render_template('maps.html', maps = sql.get_maps(), c = sql.get_count())
 
 @app.route('/maps/<int:mapid>')
 def beatmap(mapid):
