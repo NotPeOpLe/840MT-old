@@ -62,15 +62,26 @@ def get_token(code):
     r = requests.request("POST", url, headers = headers, data = payload)
     return r.json()
 
-def get_user(token: str):
+def v2req(path: str):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f"Bearer {token}"
+        'Authorization': 'Bearer ' + Token['access_token']
     }
-    r = requests.get(urlv2+"me/osu", headers = headers)
+    try:
+        r = requests.get(urlv2+path, headers = headers)
+        return r
+    except:
+        return None
+
+def get_me(token: str):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    r = requests.get(urlv2+'me/osu', headers = headers)
     return r.json()
 
-def get_user(user_id):
+def get_user(user_id: int):
     if user_id is None:
         return None
     headers = {
@@ -78,8 +89,11 @@ def get_user(user_id):
         'Authorization': 'Bearer ' + Token['access_token']
     }
 
-    user = requests.get(f'https://osu.ppy.sh/api/v2/users/{user_id}', headers = headers)
-    uj = user.json()
+    user = requests.get('%susers/%d' % (urlv2,user_id), headers = headers)
+    if user.status_code == 401:
+        get_token()
+        user = requests.get('%susers/%d' % (urlv2,user_id), headers = headers)
+
     return user.json()
 
 def get_beatmap(map_id):

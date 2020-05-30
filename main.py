@@ -25,31 +25,31 @@ def index():
     return render_template('index.html', c=sql.get_count())
 
 # 調試用
-@app.route('/test')
-def test():
-    return jsonify(sql.get_beatmapset(297558))
+@app.route('/test_<A>')
+def test(A):
+    return jsonify(A)
 
 # 玩家註冊/報名
 @app.route('/register')
 def register():
-    print(OsuAPI.authorize('register','users.read'))
-    return redirect(OsuAPI.authorize('register','users.read'))
+    print(OsuAPI.authorize('register','identify'))
+    return redirect(OsuAPI.authorize('register','identify'))
 
 # Oauth回傳用
 @app.route('/callback', methods=['GET'])
 def callback():
     if request.args['state'] == 'register':
         u = OsuAPI.get_token(request.args['code'])
-        user = OsuAPI.get_user(u['access_token'])
+        user = OsuAPI.get_me(u['access_token'])
         try:
             sql.import_user(user,u['access_token'],u['refresh_token'])
         except:
             if user['id'] in sql.get_all_users('id'):
-                return redirect(url_for('profile',user_id=user['id']))
+                return redirect(url_for('profile',user = user['id']))
             else:
                 return redirect(url_for('bad'))
     else:
-        return redirect(url_for('profile',user_id=user['id']))
+        return redirect(url_for('profile',user = user['id']))
 
 @app.route('/ok')
 def ok():
