@@ -59,11 +59,11 @@ def ok():
 def bad():
     return "<h1>No!</h1>"
 
-@app.route('/ranking/')
+@app.route('/ranking')
 def ranking():
     return render_template('ranking.html', ranking=sql.get_ranking())
 
-@app.route('/players/')
+@app.route('/players')
 def players():
     return render_template('players.html', users=sql.get_all_users())
 
