@@ -64,7 +64,7 @@
 					<td class="text-left">{{data['count50']| integer}}</td>
 					<td class="text-left">{{data['countmiss']| integer}}</td>
 					<td class="text-left">{% for mod in data['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
-					<td class="text-left" data-toggle="tooltip" data-placement="top" title="{{ data['date'] }}">{{ data['date'] | date }}</td>
+					<td class="text-left"><time data-toggle="tooltip" data-placement="top" title="{{ data['date'] }}" datetime="{{ data['date'] }}">{{ data['date'] }}</time></td>
 				</tr>
 				{% endfor %}
 			</tbody>
