@@ -1,7 +1,6 @@
 import requests
 import json
 import config as c
-from bs4 import BeautifulSoup
 
 urlv1 = "https://osu.ppy.sh/api/"
 urlv2 = "https://osu.ppy.sh/api/v2/"
