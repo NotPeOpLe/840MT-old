@@ -31,8 +31,12 @@ def clientToken():
     Confile.close()
     return
 Token = {}
+try:
+    Confile = open('osuToken','r',encoding='utf-8')
+except FileNotFoundError:
+    cf = open('osuToken','a')
+    cf.close()
 
-Confile = open('osuToken','r',encoding='utf-8')
 try:
     Token = json.loads(Confile.read())
     Confile.close()
