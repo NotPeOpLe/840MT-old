@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, jsonify
 import sql
 import OsuAPI
 import requests as r
-from bs4 import BeautifulSoup
 import json
 
 LocalAPI = Blueprint('LocalAPI',__name__) 
