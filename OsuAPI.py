@@ -63,6 +63,8 @@ def get_token(code):
     }
 
     r = requests.request("POST", url, headers = headers, data = payload)
+    if r.status_code == 400:
+        return None
     return r.json()
 
 def v2req(path: str):

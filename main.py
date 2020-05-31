@@ -1,6 +1,6 @@
 # 網頁主程式
 
-from flask import Flask, render_template, jsonify, request, url_for, redirect, abort
+from flask import Flask, render_template, jsonify, request, url_for, redirect, abort, session, g
 import OsuAPI
 import sql
 import mods
@@ -30,26 +30,32 @@ def test(A):
     return jsonify(A)
 
 # 玩家註冊/報名
-@app.route('/register')
+@app.route('/register', methods=('GET', 'POST'))
 def register():
-    print(OsuAPI.authorize('register','identify'))
-    return redirect(OsuAPI.authorize('register','identify'))
+    return redirect(OsuAPI.authorize('login','identify'))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 # Oauth回傳用
 @app.route('/callback', methods=['GET'])
 def callback():
-    if request.args['state'] == 'register':
+    if request.args['state'] == 'login':
         u = OsuAPI.get_token(request.args['code'])
         user = OsuAPI.get_me(u['access_token'])
         try:
             sql.import_user(user,u['access_token'],u['refresh_token'])
         except:
             if user['id'] in sql.get_all_users('id'):
+                session.clear()
+                session['user_id'] = user['id']
                 return redirect(url_for('profile',user = user['id']))
             else:
-                return redirect(url_for('bad'))
+                return redirect(url_for('bad'), 400)
     else:
-        return redirect(url_for('profile',user = user['id']))
+        abort(400)
 
 @app.route('/ok')
 def ok():

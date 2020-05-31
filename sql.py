@@ -174,7 +174,12 @@ def get_user(user_id: int):
     user['played_maps'] = str(row[0])
     return user
 
-def get_userid(username: str):
+def get_userid(username: str, ID=False):
+    if ID:
+        execute(f"SELECT * FROM users WHERE user_id='{username}'")
+        row = c.fetchone()
+        return row
+
     execute(f"SELECT * FROM users WHERE username='{username}'")
     row = c.fetchone()
     if row is None:
@@ -232,10 +237,7 @@ def get_scores(user_id: int):
 
 def get_ranking():
     data = []
-    execute('''SELECT RANK() OVER(ORDER BY B.rank_score DESC), A.*, B.rank_score, B.SS, B.S, B.A 
-                    FROM ranking_statistics1 A
-                    LEFT JOIN ranking_statistics2 B
-                    ON A.user_id = B.user_id''')
+    execute("SELECT * FROM ranking")
     
     row = c.fetchall()
     for s in row:
