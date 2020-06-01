@@ -1,4 +1,5 @@
-const min = 60000;
+const sec = 1000
+const min = sec * 60;
 const hour = min * 60;
 const day = hour * 24;
 
@@ -9,22 +10,15 @@ function timeFormat(data) {
     var diff = nowTime.getTime() - calTime.getTime();
 
     if (diff >= day) {
-        if (diff >= day * 2)
-            strTime = Math.round(diff / day) + " days ago";
-        else
-            strTime = Math.round(diff / day) + " day ago";
+        strTime = Math.round(diff / day) + " 天前";
     } else if (diff >= hour) {
-        if (diff >= hour * 2)
-            strTime = Math.round(diff / hour) + " hours ago";
-        else
-            strTime = Math.round(diff / hour) + " hour ago";
+        strTime = Math.round(diff / hour) + " 小時前";
     } else if (diff >= min) {
-        if (diff >= min * 2)
-            strTime = Math.round(diff / min) + " mins ago";
-        else
-            strTime = Math.round(diff / min) + " min ago";
+        strTime = Math.round(diff / min) + " 分鐘前";
+    } else if (diff >= sec) {
+        strTime = Math.round(diff / sec) + " 秒前";
     } else
-        strTime = "Less than a min ago";
-
+        strTime = "幾秒前";
+        
     return document.write(strTime)
 }
