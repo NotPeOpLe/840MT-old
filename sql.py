@@ -347,7 +347,7 @@ def import_user(user,access_token='',refresh_token=''):
     imp_u.append(user['country_code'])
     imp_u.append(access_token)
     imp_u.append(refresh_token)
-    imp_u.append(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    imp_u.append(time.strftime("%Y-%m-%d %H:%M:%SZ", time.gmtime()))
 
     str_u = str(imp_u)[1:-1]
 
