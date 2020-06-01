@@ -135,7 +135,7 @@ def get_beatmapset(setid: int):
 def get_all_users(req=None):
     user_list = []
     if req == 'id':
-        execute("SELECT user_id FROM users")
+        execute("SELECT user_id FROM users order by user_id")
         
         row = c.fetchall()
 
@@ -143,7 +143,7 @@ def get_all_users(req=None):
             user_list.append(uid[0])
         return user_list
     elif req == 'name':
-        execute("SELECT username FROM users")
+        execute("SELECT username FROM users order by username")
         
         row = c.fetchall()
 
@@ -151,7 +151,7 @@ def get_all_users(req=None):
             user_list.append(uid[0])
         return user_list
     else:
-        execute("SELECT user_id, username FROM users")
+        execute("SELECT user_id, username FROM users order by username")
         
         row = c.fetchall()
 
@@ -347,7 +347,7 @@ def import_user(user,access_token='',refresh_token=''):
     imp_u.append(user['country_code'])
     imp_u.append(access_token)
     imp_u.append(refresh_token)
-    imp_u.append(time.strftime("%Y-%m-%d %H:%M:%SZ", time.gmtime()))
+    imp_u.append(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
 
     str_u = str(imp_u)[1:-1]
 
