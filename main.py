@@ -30,8 +30,12 @@ def test():
     return jsonify(str(session))
 
 # 玩家註冊/報名
-@app.route('/register', methods=('GET', 'POST'))
+@app.route('/register')
 def register():
+    return redirect(OsuAPI.authorize('login','identify'))
+
+@app.route('/login')
+def login():
     return redirect(OsuAPI.authorize('login','identify'))
 
 @app.route('/logout')
@@ -41,7 +45,7 @@ def logout():
     return redirect(url_for('index'))
 
 # Oauth回傳用
-@app.route('/callback', methods=['GET'])
+@app.route('/callback')
 def callback():
     if request.args['state'] == 'login':
         u = OsuAPI.get_token(request.args['code'])
@@ -49,6 +53,7 @@ def callback():
         try:
             print(session)
             sql.import_user(user,u['access_token'],u['refresh_token'])
+            session.clear()
             session['user_id'] = user['id']
             session['username'] = user['username']
             print(session)
