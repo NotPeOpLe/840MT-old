@@ -1,6 +1,6 @@
 # 網頁主程式
 
-from flask import Flask, render_template, jsonify, request, url_for, redirect, abort, session, g
+from flask import Flask, render_template, jsonify, request, url_for, redirect, abort, session
 import OsuAPI
 import sql
 import mods
@@ -13,9 +13,8 @@ app.config['ENV'] = 'development'
 app.config['TEMPLATES_AUTO_RELOAD'] = True      
 app.jinja_env.auto_reload = True
 app.debug = True
-
 # app.debug = True
-app.secret_key = b'\x00F\xb2\xda\x87\x9dWgi\x88\xa8\xf2\xf0\x12\xa7\x04'
+app.secret_key  = 'test'
 app.register_blueprint(LocalAPI,url_prefix='/api') 
 
 # 網站的首頁
@@ -25,9 +24,10 @@ def index():
     return render_template('index.html', c=sql.get_count())
 
 # 調試用
-@app.route('/test_<A>')
-def test(A):
-    return jsonify(A)
+@app.route('/test')
+def test():
+    print(session)
+    return jsonify(str(session))
 
 # 玩家註冊/報名
 @app.route('/register', methods=('GET', 'POST'))
@@ -36,6 +36,7 @@ def register():
 
 @app.route('/logout')
 def logout():
+    print(session)
     session.clear()
     return redirect(url_for('index'))
 
@@ -46,11 +47,19 @@ def callback():
         u = OsuAPI.get_token(request.args['code'])
         user = OsuAPI.get_me(u['access_token'])
         try:
+            print(session)
             sql.import_user(user,u['access_token'],u['refresh_token'])
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            print(session)
+            return redirect(url_for('profile', user = user['id']))
         except:
+            print(session)
             if user['id'] in sql.get_all_users('id'):
                 session.clear()
                 session['user_id'] = user['id']
+                session['username'] = user['username']
+                print(session)
                 return redirect(url_for('profile',user = user['id']))
             else:
                 return redirect(url_for('bad'), 400)
