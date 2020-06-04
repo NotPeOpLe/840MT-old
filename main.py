@@ -15,7 +15,8 @@ app.jinja_env.auto_reload = True
 app.debug = True
 # app.debug = True
 app.secret_key  = 'test'
-app.register_blueprint(LocalAPI,url_prefix='/api') 
+app.register_blueprint(LocalAPI,url_prefix='/api')
+
 
 # 網站的首頁
 @app.route('/')
@@ -26,21 +27,22 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    print(session)
     return jsonify(str(session))
 
 # 玩家註冊/報名
 @app.route('/register')
+@app.route('/login')
 def register():
     return redirect(OsuAPI.authorize('login','identify'))
 
-@app.route('/login')
-def login():
-    return redirect(OsuAPI.authorize('login','identify'))
+def login(user_id, username):
+    session.clear()
+    session.permanent = True
+    session['user_id'] = user_id
+    session['username'] = username
 
 @app.route('/logout')
 def logout():
-    print(session)
     session.clear()
     return redirect(url_for('index'))
 
@@ -51,20 +53,12 @@ def callback():
         u = OsuAPI.get_token(request.args['code'])
         user = OsuAPI.get_me(u['access_token'])
         try:
-            print(session)
             sql.import_user(user,u['access_token'],u['refresh_token'])
-            session.clear()
-            session['user_id'] = user['id']
-            session['username'] = user['username']
-            print(session)
+            login(user['id'], user['username'])
             return redirect(url_for('profile', user = user['id']))
         except:
-            print(session)
             if user['id'] in sql.get_all_users('id'):
-                session.clear()
-                session['user_id'] = user['id']
-                session['username'] = user['username']
-                print(session)
+                login(user['id'], user['username'])
                 return redirect(url_for('profile',user = user['id']))
             else:
                 return redirect(url_for('bad'), 400)
@@ -81,6 +75,10 @@ def bad():
 
 @app.route('/ranking')
 def ranking():
+    if session:
+        print('%s有登入' % session['username'])
+    else:
+        print('沒登入')
     return render_template('ranking.html', ranking=sql.get_ranking())
 
 @app.route('/players')
@@ -110,6 +108,10 @@ def maps():
 
 @app.route('/maps/<int:mapid>')
 def beatmap(mapid):
+    if session:
+        print('%s有登入' % session['username'])
+    else:
+        print('沒登入')
     beatmap = sql.get_beatmap(mapid)
     mapset = sql.get_beatmapset(beatmap['beatmapset_id'])
     beatmap_ranking = sql.get_beatmap_ranking(mapid)
