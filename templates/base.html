@@ -63,14 +63,14 @@
                             <b class="caret"></b>
                         </a>
                         <div class="dropdown-menu dropdown-menu-left">
-                            <a href="/users/{{ session['user_id'] }}" class="dropdown-item"> 個人頁面</a>
+                            <a href="https://osu.ppy.sh/users/{{ session['user_id'] }}/osu" class="dropdown-item"> osu!官網個人頁面</a>
                             <a href="/logout" class="dropdown-item"> 登出</a>
                         </div>
                         </li>
+                        <li class="nav-item"><a href="/users/{{ session['user_id'] }}/" class="nav-link icon d-flex align-items-center"><img src="https://a.ppy.sh/{{ session['user_id'] }}" class="rounded-circle img-fluid image" style="width:50px;"></img></a></li>
                         {% else %}
                         <li class="nav-item"><a href="/login" class="nav-link icon d-flex align-items-center">登入</a></li>
                         {% endif %}
-                        <li class="nav-item"><img src="https://a.ppy.sh/{{ session['user_id'] }}" class="rounded-circle img-fluid image" style="width:50px;"></li>
                     </ul>
                 </div>
                 </div>
