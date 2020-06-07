@@ -235,9 +235,10 @@ def get_scores(user_id: int):
         data.append(d)
     return data
 
-def get_ranking():
+def get_ranking(ar=False):
     data = []
-    execute("SELECT * FROM ranking")
+    ranking_type = "achievement_rate" if ar else "rank_score"
+    execute("SELECT rank() OVER (ORDER BY %s desc) AS `rank`, ranking.* from ranking" % ranking_type)
     
     row = c.fetchall()
     for s in row:
@@ -247,12 +248,13 @@ def get_ranking():
             "username": s[2],
             "country": s[3],
             "play_count": s[4],
-            "accuracy": s[5],
-            "total_score": s[6],
-            "rank_score": s[7],
-            "SS": s[8],
-            "S": s[9],
-            "A": s[10]
+            "achievement_rate": s[5],
+            "accuracy": s[6],
+            "total_score": s[7],
+            "rank_score": s[8],
+            "SS": s[9],
+            "S": s[10],
+            "A": s[11]
         }
         data.append(d)
     return data

@@ -3,11 +3,19 @@
 {% block content %}
 <section class="ftco-section">
     <div class="container table-responsive-sm">
-        <table class="table table-sm table-responsive-md table-striped table-hover h6 container">
+        {% if my_rank %}
+        <div class="text-center">
+            <h1>排行榜</h1>
+            <a href="?type=score" class="btn btn-light">分數</a><a href="?type=ar" class="btn btn-light">達成率</a>
+            <p>你的排名目前在第 {{ my_rank['rank'] }} 名</p>
+        </div>
+        {% endif %}
+        <table class="table table-sm table-responsive-md table-striped table-hover h6">
             <thead class="thead-light">
                 <tr>
                     <th class="text-center">#</th>
                     <th class="text-left">玩家</th>
+                    <th class="text-center">達成率</th>
                     <th class="text-center">準確率</th>
                     <th class="text-center">遊戲次數</th>
                     <th class="text-center">總分</th>
@@ -21,7 +29,8 @@
                 {% for rank in ranking %}
                 <tr>
                     <td class="text-center">{{ rank['rank'] }}</td>
-                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24><a href="/users/{{ rank['user_id'] }}/"> {{ rank['username'] }}<a></td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24><a href="/users/{{ rank['user_id'] }}/"> {{ rank['username'] }}</a></td>
+                    <td class="text-center">{{ rank['achievement_rate'] | acc }}</td>
                     <td class="text-center">{{ rank['accuracy'] | acc }}</td>
                     <td class="text-center">{{ rank['play_count'] | integer }}</td>
                     <td class="text-center">{{ rank['total_score'] | integer }}</td>

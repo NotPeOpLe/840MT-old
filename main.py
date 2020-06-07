@@ -75,11 +75,19 @@ def bad():
 
 @app.route('/ranking')
 def ranking():
-    if session:
-        print('%s有登入' % session['username'])
+    if request.args.get('type') == 'ar':
+        ranking = sql.get_ranking(ar=True)
     else:
-        print('沒登入')
-    return render_template('ranking.html', ranking=sql.get_ranking())
+        ranking = sql.get_ranking()
+    my_rank = None
+    if session:
+        for rank in ranking:
+            if rank['user_id'] == session['user_id']:
+                my_rank = rank
+                break
+    else:
+        pass
+    return render_template('ranking.html', ranking=ranking, my_rank=my_rank)
 
 @app.route('/players')
 def players():
