@@ -7,9 +7,7 @@
         <div class="text-center">
             <h1>排行榜</h1>
             <a href="?type=score" class="btn btn-light">分數</a><a href="?type=ar" class="btn btn-light">達成率</a>
-            {% if my_rank %}
-            <p>你的排名目前在第 {{ my_rank['rank'] }} 名</p>
-            {% endif %}
+            <p>{% if my_rank %}你的排名目前在第 {{ my_rank['rank'] }} 名{% endif %}</p>
         </div>
         <table class="table table-sm table-responsive-md table-striped table-hover h6">
             <thead class="thead-light">
