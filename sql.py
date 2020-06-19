@@ -5,13 +5,15 @@ import json
 import OsuAPI
 import time
 import mods
+import logging as l
 
 conn = pymysql.connect(
     host=config.SQLserver,
     user=config.SQLuser,
     passwd=config.SQLpw,
     database=config.SQLdb,
-    charset="utf8"
+    charset="utf8",
+    cursorclass=pymysql.cursors.DictCursor
 )
 c = conn.cursor()
 
@@ -26,12 +28,10 @@ def execute(value):
     #     conn.rollback()
 
 def get_count():
-    execute("select (select count(*) from beatmaps),\
-    (select count(*) from users),\
-    (select count(*) from scores)")
+    execute("select * from count")
     
     row = c.fetchone()
-    return [row[0],row[1],row[2]]
+    return row
     
 def get_beatmaps_list():
     beatmap_list = []
@@ -39,7 +39,7 @@ def get_beatmaps_list():
     
     row = c.fetchall() 
     for bid in row:
-        beatmap_list.append(int(bid[0]))
+        beatmap_list.append(int(bid['beatmap_id']))
     return beatmap_list
 
 def get_maps():
@@ -50,85 +50,36 @@ def get_maps():
         GROUP BY beatmapset_id 
         ORDER BY beatmapset_id
         """)
-    
-    row = c.fetchall() 
-    for item in row:
-        d = {
-            'beatmapset_id': item[0],
-            'artist': item[1],
-            'title': item[2],
-            'creator': item[3],
-            'count_map': item[4],
-            'maindiff_id': item[6]
-        }
-        data.append(d)
-
-    return data
+    return c.fetchall()
 
 def get_beatmap(mapid: int):
     data = {}
     execute('SELECT * FROM beatmaps WHERE beatmap_id = %d' % mapid)
-    
-    row = c.fetchall() 
-    for d in row:
-        data = {
-            'beatmapset_id': d[0],
-            'beatmap_id': d[1],
-            "approved": d[2],
-            "total_length": d[3],
-            "hit_length": d[4],
-            "version": d[5],
-            "file_md5": d[6],
-            "cs": d[7],
-            "od": d[8],
-            "ar": d[9],
-            "hp": d[10],
-            "mode": d[11],
-            "artist": d[12],
-            "artist_unicode": d[13],
-            "title": d[14],
-            "title_unicode": d[15] ,
-            "creator": d[16],
-            "creator_id": d[17],
-            "bpm": d[18],
-            "difficultyrating": d[19]
-        }
-    return data
+    return c.fetchone()
 
 def get_beatmapset(setid: int):
-    data = {}
     mapid = []
     execute('SELECT beatmapset_id, artist, artist_unicode, title, title_unicode, creator FROM beatmaps WHERE beatmapset_id = %d LIMIT 1' % setid)
-    
-    row = c.fetchall() 
-    for d in row:
-        data = {
-            'beatmapset_id': d[0],
-            "artist": d[1],
-            "artist_unicode": d[2],
-            "title": d[3],
-            "title_unicode": d[4] ,
-            "creator": d[5]
-        }
+    data = c.fetchone()
     execute('SELECT beatmap_id,version,difficultyrating FROM beatmaps WHERE beatmapset_id = %d ORDER BY difficultyrating' % setid)
     
     row = c.fetchall() 
     for m in row:
         diff_color = "secondary"
-        if m[2] < 2:
+        if m["difficultyrating"] < 2:
             diff_color = "success"
-        elif m[2] < 2.7:
+        elif m["difficultyrating"] < 2.7:
             diff_color = "info"
-        elif m[2] < 4:
+        elif m["difficultyrating"] < 4:
             diff_color = "warning"
-        elif m[2] < 5.3:
+        elif m["difficultyrating"] < 5.3:
             diff_color = "danger"
-        elif m[2] < 6.5:
+        elif m["difficultyrating"] < 6.5:
             diff_color = "primary"
-        elif m[2] > 6.5:
+        elif m["difficultyrating"] > 6.5:
             diff_color = "dark"
 
-        mapid.append([m[0],m[1],m[2],diff_color])
+        mapid.append([m["beatmap_id"],m["version"],m["difficultyrating"],diff_color])
     data['mapids'] = mapid
     return data
 
@@ -136,28 +87,17 @@ def get_all_users(req=None):
     user_list = []
     if req == 'id':
         execute("SELECT user_id FROM users order by user_id")
-        
-        row = c.fetchall()
-
-        for uid in row:
-            user_list.append(uid[0])
+        for i in c.fetchall():
+            user_list.append(i['user_id'])
         return user_list
     elif req == 'name':
         execute("SELECT username FROM users order by username")
-        
-        row = c.fetchall()
-
-        for uid in row:
-            user_list.append(uid[0])
+        for i in c.fetchall():
+            user_list.append(i['username'])
         return user_list
     else:
         execute("SELECT user_id, username FROM users order by username")
-        
-        row = c.fetchall()
-
-        for uid in row:
-            user_list.append(uid)
-        return user_list
+        return c.fetchall()
 
 def get_user(user_id: int):
     execute(f"SELECT * FROM users WHERE user_id={user_id}")
@@ -165,13 +105,13 @@ def get_user(user_id: int):
     if row is None:
         return None
     
-    user = OsuAPI.get_user(row[0])
+    user = OsuAPI.get_user(row['user_id'])
 
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
-        select (select count(*) from a) as 'played map'")
-    row = c.fetchone() 
+        select (select count(*) from a) as 'played_maps'")
+    p = c.fetchone() 
 
-    user['played_maps'] = str(row[0])
+    user['played_maps'] = str(p['played_maps'])
     return user
 
 def get_userid(username: str, ID=False):
@@ -184,106 +124,63 @@ def get_userid(username: str, ID=False):
     row = c.fetchone()
     if row is None:
         return None
-    return row[0]
+    return row['user_id']
 
 def get_user_old(user_id=0):
-    data = {}
-    execute(f"SELECT * FROM users WHERE user_id={user_id}")
-    
-    row = c.fetchall() 
-
-    for d in row:
-        data['user_id'] = d[0]
-        data['username'] = d[1]
-        data['country'] = d[2]
+    execute(f"SELECT user_id, username, country FROM users WHERE user_id={user_id}")
+    data = c.fetchone()
 
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
-        select (select count(*) from a) as 'played map'")
-    row = c.fetchone() 
-    data['played_maps'] = row[0]
+        select (select count(*) from a) as 'played_maps'")
+    p = c.fetchone() 
+    data['played_maps'] = p['played_maps']
     return data
 
 def get_scores(user_id: int):
-    data = []
     if user_id == -1:
         execute(f"SELECT * FROM scores LIMIT 10")
         
-        row = c.fetchall() 
+        data = c.fetchall() 
     else:
         execute(f"SELECT * FROM scores WHERE user_id={user_id} ORDER BY date DESC LIMIT 10")
         
-        row = c.fetchall() 
+        data = c.fetchall()
 
-    for s in row:
-        d = {
-            "beatmap_id": s[0],
-            "score": s[1],
-            "maxcombo": s[2],
-            "count50": s[3],
-            "count100": s[4],
-            "count300": s[5],
-            "countmiss": s[6],
-            "countkatu": s[7],
-            "countgeki": s[8],
-            "perfect": s[9],
-            "enabled_mods": mods.formatMods(s[10]),
-            "user_id": s[11],
-            "date": s[12],
-            "rank": s[13],
-            "accuracy": s[14]
-        }
-        data.append(d)
+    for d in data:
+        d['enabled_mods'] = mods.formatMods(d['enabled_mods'])
     return data
 
 def get_ranking(ar=False):
-    data = []
     ranking_type = "achievement_rate" if ar else "rank_score"
     execute("SELECT rank() OVER (ORDER BY %s desc) AS `rank`, ranking.* from ranking" % ranking_type)
+    return c.fetchall()
+
+def get_myfirst(user_id: int):
+    execute(f'''select s.*, u.username, b.*
+        from scores as `s`
+        inner join users as `u` on s.user_id = u.user_id
+        inner join beatmaps as `b` on s.beatmap_id = b.beatmap_id
+        where s.score = (select max(score) from scores where beatmap_id=s.beatmap_id) AND s.user_id = {user_id}
+        group by s.beatmap_id''')
+    data = c.fetchall()
     
-    row = c.fetchall()
-    for s in row:
-        d = {
-            "rank": s[0],
-            "user_id": s[1],
-            "username": s[2],
-            "country": s[3],
-            "play_count": s[4],
-            "achievement_rate": s[5],
-            "accuracy": s[6],
-            "total_score": s[7],
-            "rank_score": s[8],
-            "SS": s[9],
-            "S": s[10],
-            "A": s[11]
-        }
-        data.append(d)
+    for d in data:
+        d['enabled_mods'] = mods.formatMods(d['enabled_mods'])
+    
     return data
 
 def get_beatmap_ranking(map_id: int):
-    data = []
-    execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC), S.rank, S.score, S.accuracy, U.country, U.username, S.maxcombo, S.count300, S.count100, S.count50, S.countmiss, S.enabled_mods, U.user_id, S.date  
-                FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id}) GROUP BY U.user_id ORDER BY S.score DESC''')
+    execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC) as `ranking`, S.rank as `rank`, S.score as `score`, 
+        S.accuracy as `accuracy`, U.country as `country`, U.username as `username`, S.maxcombo as `maxcombo`,
+        S.`count300` as `count300`, S.count100 as `count100`, S.count50 as `count50`, S.countmiss as `countmiss`,
+        S.enabled_mods as `enabled_mods`, U.user_id as `user_id`, S.date as `date`
+        FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score)
+        FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id}) 
+        GROUP BY U.user_id ORDER BY S.score DESC''')
     
-    row = c.fetchall()
-    for s in row:
-        d = {
-            "ranking": s[0],
-            "rank": s[1],
-            "score": s[2],
-            "accuracy": s[3],
-            "country": s[4],
-            "username": s[5],
-            "maxcombo": s[6],
-            "count300": s[7],
-            "count100": s[8],
-            "count50": s[9],
-            "countmiss": s[10],
-            "enabled_mods": mods.formatMods(s[11]),
-            "user_id": s[12],
-            "date": s[13]
-        }
-        data.append(d)
-
+    data = c.fetchall()
+    for d in data:
+        d['enabled_mods'] = mods.formatMods(d['enabled_mods'])
     return data
 
 def import_beatmaps(beatmaps):
@@ -380,7 +277,7 @@ def submit_score(score):
     execute(f"INSERT INTO scores VALUES ({str_s})")
     
     
-    print(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")
+    l.info(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")
 
 # 取玩家圖譜最高分的
 # select * from scores where beatmap_id=1482747 and user_id=6008293 order by score desc limit 1

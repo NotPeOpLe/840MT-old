@@ -27,7 +27,7 @@ def index():
 # 調試用
 @app.route('/test')
 def test():
-    return jsonify(str(session))
+    return jsonify(sql.get_ranking())
 
 # 玩家註冊/報名
 @app.route('/register')
@@ -100,6 +100,7 @@ def profile(user):
     except ValueError:
         user_id = sql.get_userid(user)
     scores = sql.get_scores(user_id)
+    myfirst = sql.get_myfirst(user_id)
     User = sql.get_user(user_id)
     if User is None:
         try:
@@ -108,7 +109,7 @@ def profile(user):
         except:
             abort(404)
     else:
-        return render_template('profile.html', scores = scores, user = User)
+        return render_template('profile.html', scores = scores, user = User, myfirst = myfirst)
 
 @app.route('/maps/')
 def maps():
@@ -128,15 +129,15 @@ def beatmap(mapid):
 # 錯誤回應
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('error.html',errmsg='你好，我是404!'), 404
+    return render_template('error.html',h1='找不到',context=error), 404
 
 @app.errorhandler(500)
 def special_exception_handler(error):
-    return render_template('error.html',errmsg='你好，我是500!'), 500
+    return render_template('error.html',h1='伺服器錯誤',context=error), 500
 
 @app.errorhandler(400)
 def bad_request(error):
-    return render_template('error.html',errmsg='你好，我是400!'), 400
+    return render_template('error.html',h1='請求錯誤',context=error), 400
 
 # 過濾器
 @app.template_filter('acc')
