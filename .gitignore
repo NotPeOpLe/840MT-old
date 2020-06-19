@@ -137,3 +137,5 @@ data.db
 sql/beatmap_ranking.sql
 sql/beatmap_ranking2.sql
 osuToken
+private.key
+certificate.crt
