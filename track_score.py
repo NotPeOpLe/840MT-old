@@ -6,7 +6,7 @@ import logging as l
 
 l.basicConfig(
     format='(%(asctime)s) [%(levelname)s]: %(message)s',
-    level=l.DEBUG,
+    level=l.INFO,
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
@@ -16,10 +16,7 @@ l.info('載入 {} 張圖譜'.format(len(beatmap_list)))
 def check_score(user_id, score, sql_scores):
     if int(score['beatmap_id']) in beatmap_list:
         if score['date'] > '2020-05-03 00:00:00':
-            if score['rank'] == 'F':
-                return False
-            else:
-                for sql_date in sql_scores:
+            for sql_date in sql_scores:
                     if sql_date['date'] == score['date']:
                         return False
         return True
@@ -44,8 +41,9 @@ while True:
         sql_scores = ddwda.get_scores(user[0])
         try:
             scores = get_recent(user[0])
-        except requests.RequestException as e:
-            pass
+        except requests.RequestException:
+            break
+            
         for score in scores:
             if check_score(user[0], score, sql_scores):
                 ddwda.submit_score(score)
