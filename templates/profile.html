@@ -21,42 +21,56 @@
 
 <section class="ftco-section bg-light">
     <div class="container">
-        <h3>遊玩紀錄</h3>
-        <table class="table table-sm table-responsive-md table-striped table-hover h6 container">
-            <thead class="thead-light">
-                <tr>
-                    <th class="text-left">圖ID</th>
-                    <th class="text-left">評價</th>
-                    <th class="text-left">分數</th>
-                    <th class="text-left">準確率</th>
-                    <th class="text-left">最大連擊</th>
-                    <th class="text-left">300</th>
-                    <th class="text-left">100</th>
-                    <th class="text-left">50</th>
-                    <th class="text-left">miss</th>
-                    <th class="text-left">mods</th>
-                    <th class="text-left">遊玩時間</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for score in scores %}
-                <tr>
-                <td class="text-left"><a href="/maps/{{ score['beatmap_id'] }}">{{ score['beatmap_id'] }}</a></td>
-                <td class="text-left"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
-                <td class="text-left">{{ score['score'] | integer }}</td>
-                <td class="text-left">{{ score['accuracy'] | acc }}</td>
-                <td class="text-left">{{ score['maxcombo'] | integer }}</td>
-                <td class="text-left">{{ score['count300'] | integer }}</td>
-                <td class="text-left">{{ score['count100'] | integer }}</td>
-                <td class="text-left">{{ score['count50'] | integer }}</td>
-                <td class="text-left">{{ score['countmiss']| integer }}</td>
-                <td class="text-left">{% for mod in score['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
-                <td class="text-left"><time data-toggle="tooltip" data-placement="top" title="{{ score['date'] }} UTC"><script>timeFormat("{{ score['date'] }}");</script></time></td>
-                </tr>
-                </body>
-                {% endfor %}
-                </tbody>
-                </table>
+        <div>
+            <h3>第一名 ({{myfirst|count}})</h3>
+            {% for m in myfirst %}
+            <div class="card">
+                <div class="card-body" style="padding:15px;">
+                    <img style="margin-right:5px;" src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{m['rank']}}.svg">
+                    <a href="/maps/{{m['beatmap_id']}}" class="h6 card-title"> {{m['artist']}} - {{m['title']}} [{{m['version']}}] ({{m['difficultyrating']|star}}★)</a>
+                    <p class="h6 card-text">{{m['score']|integer}} / {{m['maxcombo']|integer}}x { {{m['count300']|integer}} / {{m['count100']|integer}} / {{m['count50']|integer}} / {{m['countmiss']|integer}} } {{m['accuracy']|acc}} | 
+                        {% for mod in m['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</p>
+                </div>
             </div>
+            {% endfor %}
+        </div>
+        <div>
+            <h3>遊玩紀錄</h3>
+            <table class="table table-sm table-responsive-md table-striped table-hover h6 container">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-left">圖ID</th>
+                        <th class="text-left">評價</th>
+                        <th class="text-left">分數</th>
+                        <th class="text-left">準確率</th>
+                        <th class="text-left">最大連擊</th>
+                        <th class="text-left">300</th>
+                        <th class="text-left">100</th>
+                        <th class="text-left">50</th>
+                        <th class="text-left">miss</th>
+                        <th class="text-left">mods</th>
+                        <th class="text-left">遊玩時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr>
+                        <td class="text-left"><a href="/maps/{{ score['beatmap_id'] }}">{{ score['beatmap_id'] }}</a></td>
+                        <td class="text-left rank-badge"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ score['rank'] }}.svg"></td>
+                        <td class="text-left">{{ score['score'] | integer }}</td>
+                        <td class="text-left">{{ score['accuracy'] | acc }}</td>
+                        <td class="text-left">{{ score['maxcombo'] | integer }}</td>
+                        <td class="text-left">{{ score['count300'] | integer }}</td>
+                        <td class="text-left">{{ score['count100'] | integer }}</td>
+                        <td class="text-left">{{ score['count50'] | integer }}</td>
+                        <td class="text-left">{{ score['countmiss']| integer }}</td>
+                        <td class="text-left">{% for mod in score['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</td>
+                        <td class="text-left"><time data-toggle="tooltip" data-placement="top" title="{{ score['date'] }} UTC"><script>timeFormat("{{ score['date'] }}");</script></time></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
 {% endblock %}
