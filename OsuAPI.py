@@ -98,6 +98,7 @@ def get_user(user_id: int):
     if user.status_code == 401:
         clientToken()
         user = requests.get('%susers/%d' % (urlv2,user_id), headers = headers)
+    print(user.text)
 
     return user.json()
 

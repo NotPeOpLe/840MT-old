@@ -7,14 +7,14 @@ import mods
 from LocalAPI import LocalAPI, users
 import datetime
 import time
+import os
 
 app = Flask(__name__)
 app.config['ENV'] = 'development'
+app.debug = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True      
 app.jinja_env.auto_reload = True
-app.debug = True
-# app.debug = True
-app.secret_key  = 'test'
+app.secret_key  = os.urandom(16)
 app.register_blueprint(LocalAPI,url_prefix='/api')
 
 
@@ -49,7 +49,7 @@ def logout():
 # Oauth回傳用
 @app.route('/callback')
 def callback():
-    if request.args['state'] == 'login':
+    if request.args.get('state') == 'login':
         u = OsuAPI.get_token(request.args['code'])
         user = OsuAPI.get_me(u['access_token'])
         try:
@@ -61,9 +61,9 @@ def callback():
                 login(user['id'], user['username'])
                 return redirect(url_for('profile',user = user['id']))
             else:
-                return redirect(url_for('bad'), 400)
+                abort(400)
     else:
-        abort(400)
+        return redirect(url_for('index'))
 
 @app.route('/ok')
 def ok():
