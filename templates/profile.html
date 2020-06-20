@@ -22,17 +22,25 @@
 <section class="ftco-section bg-light">
     <div class="container">
         <div>
-            <h3>第一名 ({{myfirst|count}})</h3>
-            {% for m in myfirst %}
-            <div class="card">
-                <div class="card-body" style="padding:15px;">
-                    <img style="margin-right:5px;" src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{m['rank']}}.svg">
-                    <a href="/maps/{{m['beatmap_id']}}" class="h6 card-title"> {{m['artist']}} - {{m['title']}} [{{m['version']}}] ({{m['difficultyrating']|star}}★)</a>
-                    <p class="h6 card-text">{{m['score']|integer}} / {{m['maxcombo']|integer}}x { {{m['count300']|integer}} / {{m['count100']|integer}} / {{m['count50']|integer}} / {{m['countmiss']|integer}} } {{m['accuracy']|acc}} | 
+            {% if myfirst|count > 0 %}
+            <h3>第一名 ({{myfirst|count}})
+                <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#myfirst" role="button" aria-expanded="false" aria-controls="myfirst">
+                    顯示
+                </a>
+            </h3>
+            <div class="collapse overflow-auto" id="myfirst" style="max-height: 500px">
+                {% for m in myfirst %}
+                <div class="card">
+                    <div class="card-body" style="padding:15px;">
+                        <img style="margin-right:5px;" src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{m['rank']}}.svg">
+                        <a href="/maps/{{m['beatmap_id']}}" class="h6 card-title"> {{m['artist']}} - {{m['title']}} [{{m['version']}}] ({{m['difficultyrating']|star}}★)</a>
+                        <p class="h6 card-text">{{m['score']|integer}} / {{m['maxcombo']|integer}}x { {{m['count300']|integer}} / {{m['count100']|integer}} / {{m['count50']|integer}} / {{m['countmiss']|integer}} } {{m['accuracy']|acc}} | 
                         {% for mod in m['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</p>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% endif %}
         </div>
         <div>
             <h3>遊玩紀錄</h3>
