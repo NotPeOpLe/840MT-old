@@ -112,7 +112,7 @@ def get_user(user_id: int):
     if (user['id'] == row['user_id']) and (user['username'] != row['username']):
         for pu in user['previous_usernames']:
             if pu == row['username']:
-                execute(f'update 840MT.users set users.username=`{user["username"]}` where user_id={row["user_id"]}')
+                execute(f'update 840MT.users set username=`{user["username"]}` where user_id={row["user_id"]}')
 
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
         select (select count(*) from a) as 'played_maps'")
