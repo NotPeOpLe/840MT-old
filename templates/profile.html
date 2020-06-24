@@ -6,11 +6,11 @@
     <div class="container">
         <div class="row">
             <div class="col-auto">
-                <img src="https://a.ppy.sh/{{ user['id'] }}" class="rounded img-fluid" width=160>
+                <img src="https://a.ppy.sh/{{ user['user_id'] }}" class="rounded img-fluid" width=160>
             </div>
             <div class="col-6">
                 <h1>{{ user['username'] }}</h1>
-                <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country']['code'] }}.png" width=24> {{ user['country']['name'] }} | <a href="https://osu.ppy.sh/users/{{ user['id'] }}">osu!個人頁面</a>
+                <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country_code'] }}.png" width=24> {{ user['country_name'] }} | <a href="https://osu.ppy.sh/users/{{ user['user_id'] }}">osu!個人頁面</a>
             </div>
             <div class="col-auto">
                 完成圖譜數量: {{ user['played_maps'] }}/78
