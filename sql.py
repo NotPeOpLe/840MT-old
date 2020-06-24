@@ -253,8 +253,7 @@ def update_user(user_id):
     if (user_api['country']['code'] != user_sql['country_code']) or (user_api['country']['name'] != user_sql['country_name']):
         execute(f'update 840MT.users set country_code="{user_api["country"]["code"]}",country_name="{user_api["country"]["name"]}" where user_id={user_id}')
     
-    print(get_user(user_id))
-update_user(6008293)
+    return get_user(user_id)
 
 def import_user(user):
     execute(f"SELECT user_id FROM users WHERE user_id")
