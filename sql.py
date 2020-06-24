@@ -104,21 +104,13 @@ def get_user(user_id: int):
     row = c.fetchone() 
     if row is None:
         return None
-    
-    user = OsuAPI.get_user(row['user_id'])
-    print('apiget',user['username'])
-
-    # 被動觸發改名
-    if (user['id'] == row['user_id']) and (user['username'] != row['username']):
-        if row['username'] in row['username']:
-                execute(f'update 840MT.users set username="{user["username"]}" where user_id={row["user_id"]}')
 
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
         select (select count(*) from a) as 'played_maps'")
     p = c.fetchone() 
 
-    user['played_maps'] = str(p['played_maps'])
-    return user
+    row['played_maps'] = str(p['played_maps'])
+    return row
 
 def get_userid(username: str, ID=False):
     if ID:
@@ -133,7 +125,7 @@ def get_userid(username: str, ID=False):
     return row['user_id']
 
 def get_user_old(user_id=0):
-    execute(f"SELECT user_id, username, country FROM users WHERE user_id={user_id}")
+    execute(f"SELECT user_id, username, country_code FROM users WHERE user_id={user_id}")
     data = c.fetchone()
 
     execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) \
@@ -177,7 +169,7 @@ def get_myfirst(user_id: int):
 
 def get_beatmap_ranking(map_id: int):
     execute(f'''SELECT RANK() OVER(ORDER BY S.score DESC) as `ranking`, S.rank as `rank`, S.score as `score`, 
-        S.accuracy as `accuracy`, U.country as `country`, U.username as `username`, S.maxcombo as `maxcombo`,
+        S.accuracy as `accuracy`, U.country_code as `country`, U.username as `username`, S.maxcombo as `maxcombo`,
         S.`count300` as `count300`, S.count100 as `count100`, S.count50 as `count50`, S.countmiss as `countmiss`,
         S.enabled_mods as `enabled_mods`, U.user_id as `user_id`, S.date as `date`
         FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score)
@@ -242,21 +234,41 @@ def import_beatmap_sql(b):
         print("import beatmaps:{} {} - {} [{}].".format(imp["beatmap_id"], imp["artist"], imp["title"], imp["version"]))
         
 
+def update_user(user_id):
+    user_sql = get_user(user_id)
+    user_api = OsuAPI.get_user(user_id)
 
+    if user_api == None and user_id in get_all_users('id'):
+        execute(f'delete from users where user_id={user_id}')
+        return None
 
-def import_user(user,access_token='',refresh_token=''):
+    # 被動觸發改名
+    if (user_api['id'] == user_sql['user_id']) and (user_api['username'] != user_sql['username']):
+        if user_sql['username'] in user_api['previous_usernames']:
+                execute(f'update 840MT.users set username="{user_api["username"]}" where user_id={user_id}')
+    
+    if user_api['cover_url'] != user_sql['cover_url']:
+        execute(f'update 840MT.users set cover_url="{user_api["cover_url"]}" where user_id={user_id}')
+    
+    if (user_api['country']['code'] != user_sql['country_code']) or (user_api['country']['name'] != user_sql['country_name']):
+        execute(f'update 840MT.users set country_code="{user_api["country"]["code"]}",country_name="{user_api["country"]["name"]}" where user_id={user_id}')
+    
+    print(get_user(user_id))
+update_user(6008293)
+
+def import_user(user):
     execute(f"SELECT user_id FROM users WHERE user_id")
     imp_u = []
     imp_u.append(user['id'])
     imp_u.append(user['username'])
-    imp_u.append(user['country_code'])
-    imp_u.append(access_token)
-    imp_u.append(refresh_token)
+    imp_u.append(user['country']['code'])
+    imp_u.append(user['country']['name'])
     imp_u.append(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
+    imp_u.append(user['cover_url'])
 
     str_u = str(imp_u)[1:-1]
 
-    execute(f"INSERT INTO users (user_id,username,country,access_token,refresh_token,join_date) \
+    execute(f"INSERT INTO users (user_id,username,country_code,country_name,join_date,cover_url) \
         VALUES ({str_u})")
 
 def submit_score(score):
@@ -285,12 +297,5 @@ def submit_score(score):
     
     l.info(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")
 
-# 取玩家圖譜最高分的
-# select * from scores where beatmap_id=1482747 and user_id=6008293 order by score desc limit 1
-
-# 圖譜排名
-# select * from scores where beatmap_id=1482745 group by user_id order by score desc
-
-# select RANK() OVER(order by score desc) as rank,* from scores where beatmap_id=1482745 group by user_id  
 def close():
     conn.close()

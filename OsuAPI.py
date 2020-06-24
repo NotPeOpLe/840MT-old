@@ -99,6 +99,9 @@ def get_user(user_id: int):
         clientToken()
         user = requests.get('%susers/%d' % (urlv2,user_id), headers = headers)
 
+    if user.status_code == 404:
+        return None
+
     return user.json()
 
 def get_beatmap(map_id):

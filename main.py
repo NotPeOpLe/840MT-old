@@ -40,6 +40,7 @@ def login(user_id, username):
     session.permanent = True
     session['user_id'] = user_id
     session['username'] = username
+    sql.update_user(user_id)
 
 @app.route('/logout')
 def logout():
@@ -53,7 +54,7 @@ def callback():
         u = OsuAPI.get_token(request.args['code'])
         user = OsuAPI.get_me(u['access_token'])
         try:
-            sql.import_user(user,u['access_token'],u['refresh_token'])
+            sql.import_user(user)
             login(user['id'], user['username'])
             return redirect(url_for('profile', user = user['id']))
         except:
@@ -99,17 +100,18 @@ def profile(user):
         user_id = int(user)
     except ValueError:
         user_id = sql.get_userid(user)
-    scores = sql.get_scores(user_id)
-    myfirst = sql.get_myfirst(user_id)
+    
     User = sql.get_user(user_id)
-    if User is None:
+    if User == None:
         try:
             user_id = sql.get_userid(user)
             return redirect(url_for('profile', user = user_id))
         except:
             abort(404)
-    else:
-        return render_template('profile.html', scores = scores, user = User, myfirst = myfirst)
+
+    scores = sql.get_scores(user_id)
+    myfirst = sql.get_myfirst(user_id)
+    return render_template('profile.html', scores = scores, user = User, myfirst = myfirst)
 
 @app.route('/maps/')
 def maps():
