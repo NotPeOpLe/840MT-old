@@ -296,5 +296,13 @@ def submit_score(score):
     
     l.info(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")
 
+
+def update_all_users():
+    i = 0
+    for u in get_all_users('id'):
+        update_user(u)
+        i += 1
+    print(i,'位玩家已更新')
+    
 def close():
     conn.close()
