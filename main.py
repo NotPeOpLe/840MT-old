@@ -24,6 +24,10 @@ def index():
     # count 是簡單統計報名玩家、成績上船的數量
     return render_template('index.html', c=sql.get_count())
 
+@app.route('/rule')
+def rule():
+    return render_template('rule.html')
+
 # 調試用
 @app.route('/test')
 def test():
