@@ -6,7 +6,22 @@
         
         <div class="text-center">
             <h1>排行榜</h1>
-            <a href="?type=score" class="btn btn-light">分數</a><a href="?type=ar" class="btn btn-light">達成率</a>
+            <p>目前比賽為第{{now_week[2]}}周，您目前看的是第{{week[2]}}周的排行榜</p>
+            <a href="?type={{type}}&week={{now_week[2]}}" role="button" class="btn btn-secondary btn-sm">本周排行</a>
+            <div class="btn-group" role="group" aria-label="week">
+                <a href="?type={{type}}&week=1" role="button" class="btn btn-secondary btn-sm {% if week[2]==1 %}active{% endif %}">1</a>
+                <a href="?type={{type}}&week=2" role="button" class="btn btn-secondary btn-sm {% if week[2]==2 %}active{% endif %}">2</a>
+                <a href="?type={{type}}&week=3" role="button" class="btn btn-secondary btn-sm {% if week[2]==3 %}active{% endif %}">3</a>
+                <a href="?type={{type}}&week=4" role="button" class="btn btn-secondary btn-sm {% if week[2]==4 %}active{% endif %}">4</a>
+                <a href="?type={{type}}&week=5" role="button" class="btn btn-secondary btn-sm {% if week[2]==5 %}active{% endif %}">5</a>
+                <a href="?type={{type}}&week=6" role="button" class="btn btn-secondary btn-sm {% if week[2]==6 %}active{% endif %}">6</a>
+                <a href="?type={{type}}&week=7" role="button" class="btn btn-secondary btn-sm {% if week[2]==7 %}active{% endif %}">7</a>
+                <a href="?type={{type}}&week=8" role="button" class="btn btn-secondary btn-sm {% if week[2]==8 %}active{% endif %}">8</a>
+                <a href="?type={{type}}&week=9" role="button" class="btn btn-secondary btn-sm {% if week[2]==9 %}active{% endif %}">9</a>
+                <a href="?type={{type}}&week=10" role="button" class="btn btn-secondary btn-sm {% if week[2]==10 %}active{% endif %}">10</a>
+            </div>
+            {% if week %}<a href="?type={{type}}" role="button" class="btn btn-secondary btn-sm">回到總排行</a>{% endif %}<br>
+            <a href="?type=score{% if week %}&week={{week[2]}}{% endif %}" class="btn btn-light {% if type=='score' %}active{% endif %}">分數</a><a href="?type=ar{% if week %}&week={{week[2]}}{% endif %}" class="btn btn-light {% if type=='ar' %}active{% endif %}">達成率</a>
             <p>{% if my_rank %}你的排名目前在第 {{ my_rank['rank'] }} 名{% endif %}</p>
         </div>
         <table class="table table-sm table-responsive-md table-striped table-hover h6">

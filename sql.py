@@ -17,6 +17,28 @@ conn = pymysql.connect(
 )
 c = conn.cursor()
 
+week = [
+    ["2020-06-21","2020-06-27",0],
+    ["2020-06-28","2020-07-04",1],
+    ["2020-07-05","2020-07-04",2],
+    ["2020-07-12","2020-07-18",3],
+    ["2020-07-19","2020-07-25",4],
+    ["2020-07-26","2020-08-01",5],
+    ["2020-08-02","2020-08-08",6],
+    ["2020-08-09","2020-08-15",7],
+    ["2020-08-16","2020-08-22",8],
+    ["2020-08-23","2020-08-29",9],
+    ["2020-08-30","2020-09-05",10]
+]
+
+now_date = time.strftime("%Y-%m-%d", time.gmtime())
+now_week = None
+for d in week:
+    if now_date > d[0] and now_date < d[1]:
+        now_week = d
+        print('now_week:',now_week[2])
+        break
+
 def execute(value):
     conn.ping(reconnect=True)
     c.execute(value)
@@ -153,6 +175,11 @@ def get_ranking(ar=False):
     execute("SELECT rank() OVER (ORDER BY %s desc) AS `rank`, ranking.* from ranking" % ranking_type)
     return c.fetchall()
 
+def get_week_ranking(ar=False,start_date=now_week[0], end_date=now_week[1]):
+    ranking_type = "achievement_rate" if ar else "rank_score"
+    execute("with data_1 as ( select s.user_id AS user_id, u.username AS Username, u.country_code AS country_code, count(s.user_id) AS play_count, ( sum(s.accuracy) / ( select count.beatmaps from count ) ) AS achievement_rate, avg(s.accuracy) AS Accuracy, sum(s.score) AS total_score from ( scores s join users u ) where (s.user_id = u.user_id) and ( s.date > '{0}' and s.date < '{1}' ) group by u.user_id ), data_2 as ( select s.user_id AS user_id, s.beatmap_id AS beatmap_id, max(s.score) AS bestscore, s.rank AS 'rank' from scores s where ( s.date > '{0}' and s.date < '{1}' ) group by s.beatmap_id, s.user_id order by s.user_id ), data_3 as ( select d.user_id AS user_id, sum(d.bestscore) AS rank_score, sum( ( case when ( (d.rank = 'X') or (d.rank = 'XH') ) then 1 else 0 end ) ) AS SS, sum( ( case when ( (d.rank = 'S') or (d.rank = 'SH') ) then 1 else 0 end ) ) AS S, sum( ( case when (d.rank = 'A') then 1 else 0 end ) ) AS A from ( data_2 d join users u ) where (d.user_id = u.user_id) group by u.user_id ), week_ranking as ( select a.user_id AS user_id, a.Username AS username, a.country_code AS country_code, a.play_count AS play_count, a.achievement_rate AS achievement_rate, a.Accuracy AS accuracy, a.total_score AS total_score, b.rank_score AS rank_score, b.SS AS SS, b.S AS S, b.A AS A from ( data_1 as a left join data_3 b on((a.user_id = b.user_id)) )) SELECT rank() OVER (ORDER BY {2} desc) AS 'rank', week_ranking.* from week_ranking".format(start_date, end_date, ranking_type))
+    return c.fetchall()
+
 def get_myfirst(user_id: int):
     execute(f'''select s.*, u.username, b.*
         from scores as `s`
@@ -256,7 +283,8 @@ def update_user(user_id):
     return get_user(user_id)
 
 def import_user(user):
-    execute(f"SELECT user_id FROM users WHERE user_id")
+    if user.get('id') in get_all_users('id'):
+        raise Exception
     imp_u = []
     imp_u.append(user['id'])
     imp_u.append(user['username'])

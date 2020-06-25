@@ -80,19 +80,31 @@ def bad():
 
 @app.route('/ranking')
 def ranking():
-    if request.args.get('type') == 'ar':
-        ranking = sql.get_ranking(ar=True)
+    week = sql.now_week
+    ranking_type = request.args.get('type')
+
+    if ranking_type not in ['score', 'ar']:
+        return redirect(url_for('ranking',type='score'))
+    
+    if request.args.get('week'):
+        try:
+            week_int = int(request.args.get('week'))
+            for w in sql.week:
+                if week_int == w[2]:
+                    week = w
+                    break
+        except ValueError:
+            week = sql.now_week
+        ranking = sql.get_week_ranking(ranking_type == 'ar',week[0],week[1])
     else:
-        ranking = sql.get_ranking()
+        ranking = sql.get_ranking(ranking_type == 'ar')
     my_rank = None
     if session:
         for rank in ranking:
             if rank['user_id'] == session['user_id']:
                 my_rank = rank
                 break
-    else:
-        pass
-    return render_template('ranking.html', ranking=ranking, my_rank=my_rank)
+    return render_template('ranking.html', ranking=ranking, my_rank=my_rank, type=ranking_type, week=week, now_week=sql.now_week)
 
 @app.route('/players')
 def players():
