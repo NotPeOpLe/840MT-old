@@ -34,7 +34,7 @@ week = [
 now_date = time.strftime("%Y-%m-%d", time.gmtime())
 now_week = None
 for d in week:
-    if now_date > d[0] and now_date < d[1]:
+    if now_date >= d[0] and now_date <= d[1]:
         now_week = d
         print('now_week:',now_week[2])
         break
