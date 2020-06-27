@@ -265,6 +265,12 @@ def update_user(user_id):
     user_sql = get_user(user_id)
     user_api = OsuAPI.get_user(user_id)
 
+    if user_api.get('id') == None:
+        try:
+            user_api = OsuAPI.get_user(user_id)
+        except Exception:
+            return
+
     if user_api == None and user_id in get_all_users('id'):
         execute(f'delete from users where user_id={user_id}')
         return None
