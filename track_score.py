@@ -144,10 +144,72 @@ def submit_score(score):
 
     str_s = str(imp_s)[1:-1]
 
+    get_sql(f"INSERT INTO scores VALUES ({str_s})")
+    l.debug(f"submit_score uid:{imp_s[11]} b:{imp_s[0]} score:{imp_s[1]} {imp_s[13]} ticks:{imp_s[12]}")
+
+    l.info(f"{user['username']} 在 {songstr} 上傳了一個成績，分數 {int(score['score']):,} 評價 {score['rank']}")
+    if score['rank'] != 'F':
+        now_ranking = get_beatmap_ranking(score['beatmap_id'])
+
+        rank = '　'
+        if score['rank'] == 'XH':
+            rank = '<:rank_XH:726343531035099186>'
+        elif score['rank'] == 'X':
+            rank = '<:rank_X:726343530989223936>'
+        elif score['rank'] == 'SH':
+            rank = '<:rank_SH:726343530854744065>'
+        elif score['rank'] == 'S':
+            rank = '<:rank_S:726343530816995379>'
+        elif score['rank'] == 'A':
+            rank = '<:rank_A:726343531110858773>'
+        elif score['rank'] == 'B':
+            rank = '<:rank_B:726343531026841620>'
+        elif score['rank'] == 'C':
+            rank = '<:rank_C:726343531006001152>'
+        elif score['rank'] == 'D':
+            rank = '<:rank_D:726343531005870161>'
+
+        if before_ranking == ():
+            fsm = user['first_submit_maps'] + 1
+            get_sql(f'update 840mt.users set first_submit_maps={fsm} where user_id={now_ranking[0]["user_id"]}')
+            msg = f"{rank} [{now_ranking[0]['username']}](http://840MT.ddns.net/users/{now_ranking[0]['user_id']}) 拿下了 [{songstr}](http://840MT.ddns.net/maps/{beatmap['beatmap_id']}) 的第一個成績"
+            post(msg)
+            l.info(f"{rank} {now_ranking[0]['username']} 拿下了 {songstr} 的第一個成績")
+            return
+        if before_ranking[0]['user_id'] != now_ranking[0]['user_id']:
+            msg = f"{rank} [{before_ranking[0]['username']}](http://840MT.ddns.net/users/{before_ranking[0]['user_id']}) 失去了 [{songstr}](http://840MT.ddns.net/maps/{beatmap['beatmap_id']}) 的第一名"
+            post(msg)
+            l.info(f"{before_ranking[0]['username']} 失去了 {songstr} 的第一名")
+        if before_ranking[0]['user_id'] == now_ranking[0]['user_id']:
+            if before_ranking[0]['score'] < now_ranking[0]['score']:
+                msg = f"{rank} [{now_ranking[0]['username']}](http://840MT.ddns.net/users/{now_ranking[0]['user_id']}) 在 [{songstr}](http://840MT.ddns.net/maps/{beatmap['beatmap_id']}) 刷新了自己第一名的新紀錄"
+                post(msg)
+                l.info(f"{rank} {now_ranking[0]['username']} 在 {songstr} 刷新了自己第一名的新紀錄")
+                return
+        bs = {}
+        ns = {}
+        for r in now_ranking:
+            if r['user_id'] == int(score['user_id']):
+                ns = r
+                break
+        for r in before_ranking:
+            if r['user_id'] == int(score['user_id']):
+                bs = r
+                break
+            else:
+                msg = f"{rank} [{ns['username']}](http://840MT.ddns.net/users/{ns['user_id']}) 在 [{songstr}](http://840MT.ddns.net/maps/{beatmap['beatmap_id']}) 中取得第 {ns['ranking']} 名"
+                post(msg)
+                l.info(f"{ns['username']} 在 {songstr} 中取得第 {ns['ranking']} 名")
+                return
+        if bs['ranking'] > ns['ranking']:
+            msg = f"{rank} [{ns['username']}](http://840MT.ddns.net/users/{ns['user_id']}) 在 [{songstr}](http://840MT.ddns.net/maps/{beatmap['beatmap_id']}) 中取得第 {ns['ranking']} 名"
+            post(msg)
+            l.info(f"{ns['username']} 在 {songstr} 中取得第 {ns['ranking']} 名")
+
 def check_score(user_id, score, sql_scores):
-            for sql_date in sql_scores:
-                    if sql_date['date'] == score['date']:
-                        return False
+    for sql_date in sql_scores:
+        if sql_date['date'] == score['date']:
+            return False
     if int(score['beatmap_id']) not in get_beatmaps_list():
         return False
     if score['date'] < '2020-05-03 00:00:00':
@@ -155,7 +217,8 @@ def check_score(user_id, score, sql_scores):
     if mods.mods.ScoreV2 not in mods.mods(int(score['enabled_mods'])):
         return False
 
-        return True
+    return True
+    
 
 def get_recent(user_id):
     i = 0
@@ -193,4 +256,4 @@ while debug:
     for score in scores:
         if check_score(6008293, score, sql_scores):
             submit_score(score)
-        sleep(0.5)
+    sleep(0.5)
