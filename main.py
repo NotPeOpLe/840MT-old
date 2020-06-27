@@ -56,17 +56,20 @@ def logout():
 def callback():
     if request.args.get('state') == 'login':
         u = OsuAPI.get_token(request.args['code'])
-        user = OsuAPI.get_me(u['access_token'])
         try:
-            sql.import_user(user)
-            login(user['id'], user['username'])
-            return redirect(url_for('profile', user = user['id']))
+            user = OsuAPI.get_me(u['access_token'])
         except:
-            if user['id'] in sql.get_all_users('id'):
+            return redirect(url_for('register'))
+        if user['id'] in sql.get_all_users('id'):
+            login(user['id'], user['username'])
+            return redirect(url_for('profile',user = user['id']))
+        else:
+            try:
+                sql.import_user(user)
                 login(user['id'], user['username'])
-                return redirect(url_for('profile',user = user['id']))
-            else:
-                abort(400)
+                return redirect(url_for('profile', user = user['id']))
+            except:
+                return redirect(url_for('register'))
     else:
         return redirect(url_for('index'))
 
