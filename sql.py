@@ -185,7 +185,7 @@ def get_myfirst(user_id: int):
         from scores as `s`
         inner join users as `u` on s.user_id = u.user_id
         inner join beatmaps as `b` on s.beatmap_id = b.beatmap_id
-        where s.score = (select max(score) from scores where beatmap_id=s.beatmap_id) AND s.user_id = {user_id}
+        where s.score = (select max(score) from scores where beatmap_id=s.beatmap_id and s.rank IN('D','C','B','A','S','X','SH','XH')) AND s.user_id = {user_id}
         group by s.beatmap_id''')
     data = c.fetchall()
     
@@ -200,7 +200,7 @@ def get_beatmap_ranking(map_id: int):
         S.`count300` as `count300`, S.count100 as `count100`, S.count50 as `count50`, S.countmiss as `countmiss`,
         S.enabled_mods as `enabled_mods`, U.user_id as `user_id`, S.date as `date`
         FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score)
-        FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id}) 
+        FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id} AND S.rank IN('D','C','B','A','S','X','SH','XH')) 
         GROUP BY U.user_id ORDER BY S.score DESC''')
     
     data = c.fetchall()
