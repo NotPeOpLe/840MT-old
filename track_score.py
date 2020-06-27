@@ -145,14 +145,17 @@ def submit_score(score):
     str_s = str(imp_s)[1:-1]
 
 def check_score(user_id, score, sql_scores):
-    if int(score['beatmap_id']) in beatmap_list:
-        if score['date'] > '2020-05-03 00:00:00':
             for sql_date in sql_scores:
                     if sql_date['date'] == score['date']:
                         return False
-        return True
-    else:
+    if int(score['beatmap_id']) not in get_beatmaps_list():
         return False
+    if score['date'] < '2020-05-03 00:00:00':
+        return False
+    if mods.mods.ScoreV2 not in mods.mods(int(score['enabled_mods'])):
+        return False
+
+        return True
 
 def get_recent(user_id):
     i = 0
