@@ -11,9 +11,11 @@
             <div class="col-6">
                 <h1>{{ user['username'] }}</h1>
                 <img src="{{ url_for('static',filename='images/flags/') }}{{ user['country_code'] }}.png" width=24> {{ user['country_name'] }} | <a href="https://osu.ppy.sh/users/{{ user['user_id'] }}">osu!個人頁面</a>
+                <p>報名時間: {{ user['join_date'] }}
+                <br>完成圖譜數量: {{ user['played_maps'] }}/78</p>
             </div>
             <div class="col-auto">
-                完成圖譜數量: {{ user['played_maps'] }}/78
+                
             </div>
         </div>
     </div>
@@ -31,10 +33,14 @@
             <div class="collapse overflow-auto" id="myfirst" style="max-height: 500px">
                 {% for m in myfirst %}
                 <div class="card">
-                    <div class="card-body" style="padding:15px;">
-                        <img style="margin-right:5px;" src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{m['rank']}}.svg">
-                        <a href="/maps/{{m['beatmap_id']}}" class="h6 card-title"> {{m['artist']}} - {{m['title']}} [{{m['version']}}] ({{m['difficultyrating']|star}}★)</a>
-                        <p class="h6 card-text">{{m['score']|integer}} / {{m['maxcombo']|integer}}x { {{m['count300']|integer}} / {{m['count100']|integer}} / {{m['count50']|integer}} / {{m['countmiss']|integer}} } {{m['accuracy']|acc}} | 
+                    <div class="card-body" style="padding:15px; background:url('https://b.ppy.sh/thumb/{{m['beatmapset_id']}}l.jpg') right no-repeat;">
+                        
+                        <a href="/maps/{{m['beatmap_id']}}" class="h6 card-title" style="">
+                            <img style="margin-right:5px;" src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{m['rank']}}.svg">
+                            {{m['artist']}} - {{m['title']}} [{{m['version']}}] ({{m['difficultyrating']|star}}★)
+                        </a>
+                        <p class="h6 card-text">
+                        {{m['score']|integer}} / {{m['maxcombo']|integer}}x { {{m['count300']|integer}} / {{m['count100']|integer}} / {{m['count50']|integer}} / {{m['countmiss']|integer}} } {{m['accuracy']|acc}} | 
                         {% for mod in m['enabled_mods'] %}<img src="{{ url_for('static',filename='images/badges/mods/') }}{{ mod }}.png" class="mods" alt={{ mod }} data-toggle="tooltip" data-placement="top" title={{ mod }}>{% endfor %}</p>
                     </div>
                 </div>
