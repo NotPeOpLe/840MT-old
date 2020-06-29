@@ -10,7 +10,7 @@ if debug:
 else:
     CLIENT_ID = 647
     CLIENT_SECRET = "DRAgvrg7F3rRlaKc26BHGaRbyR5r5R372cIAchNF"
-    REDIRECT_URL = "http://mt.840.gg/callback"
+    REDIRECT_URL = "https://mt.840.gg/callback"
     SQLserver = "840MT.ddns.net"
 
 SQLuser = "mt"
