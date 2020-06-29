@@ -210,6 +210,8 @@ def check_score(user_id, score, sql_scores):
     for sql_date in sql_scores:
         if sql_date['date'] == score['date']:
             return False
+    if score['rank'] == 'F':
+        return False
     if int(score['beatmap_id']) not in get_beatmaps_list():
         return False
     if score['date'] < '2020-05-03 00:00:00':
@@ -238,7 +240,7 @@ while True:
         sql_scores = get_scores(user[0])
         try:
             scores = get_recent(user[0])
-        except requests.RequestException:
+        except Exception:
             break
             
         for score in scores:
