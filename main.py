@@ -35,12 +35,12 @@ def test():
 def register():
     return redirect(OsuAPI.authorize('login','identify'))
 
-def login(user_id, username):
+def login(user):
     session.clear()
     session.permanent = True
-    session['user_id'] = user_id
-    session['username'] = username
-    sql.update_user(user_id)
+    session['user_id'] = user['id']
+    session['username'] = user['username']
+    sql.update_user(user)
 
 @app.route('/logout')
 def logout():
@@ -57,12 +57,12 @@ def callback():
         except:
             return redirect(url_for('register'))
         if user['id'] in sql.get_all_users('id'):
-            login(user['id'], user['username'])
+            login(user)
             return redirect(url_for('profile',user = user['id']))
         else:
             try:
                 sql.import_user(user)
-                login(user['id'], user['username'])
+                login(user)
                 return redirect(url_for('profile', user = user['id']))
             except:
                 return redirect(url_for('register'))

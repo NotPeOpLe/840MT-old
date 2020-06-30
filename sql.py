@@ -185,7 +185,7 @@ def get_myfirst(user_id: int):
         from scores as `s`
         inner join users as `u` on s.user_id = u.user_id
         inner join beatmaps as `b` on s.beatmap_id = b.beatmap_id
-        where s.score = (select max(score) from scores where beatmap_id=s.beatmap_id and s.rank IN('D','C','B','A','S','X','SH','XH')) AND s.user_id = {user_id}
+        where s.score = (select max(score) from scores where beatmap_id=s.beatmap_id AND s.user_id = {user_id}
         group by s.beatmap_id''')
     data = c.fetchall()
     
@@ -200,7 +200,7 @@ def get_beatmap_ranking(map_id: int):
         S.`count300` as `count300`, S.count100 as `count100`, S.count50 as `count50`, S.countmiss as `countmiss`,
         S.enabled_mods as `enabled_mods`, U.user_id as `user_id`, S.date as `date`
         FROM scores AS S, users AS U WHERE S.score=(SELECT MAX(S.score)
-        FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id} AND S.rank IN('D','C','B','A','S','X','SH','XH')) 
+        FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={map_id} 
         GROUP BY U.user_id ORDER BY S.score DESC''')
     
     data = c.fetchall()
@@ -261,32 +261,25 @@ def import_beatmap_sql(b):
         print("import beatmaps:{} {} - {} [{}].".format(imp["beatmap_id"], imp["artist"], imp["title"], imp["version"]))
         
 
-def update_user(user_id):
-    user_sql = get_user(user_id)
-    user_api = OsuAPI.get_user(user_id)
+def update_user(user):
+    user_sql = get_user(user['id'])
 
-    if user_api.get('id') == None:
-        try:
-            user_api = OsuAPI.get_user(user_id)
-        except Exception:
-            return
-
-    if user_api == None and user_id in get_all_users('id'):
-        execute(f'delete from users where user_id={user_id}')
+    if user['id'] not in get_all_users('id'):
+        execute(f'delete from users where user_id={user["id"]}')
         return None
 
     # 被動觸發改名
-    if (user_api['id'] == user_sql['user_id']) and (user_api['username'] != user_sql['username']):
-        if user_sql['username'] in user_api['previous_usernames']:
-                execute(f'update 840MT.users set username="{user_api["username"]}" where user_id={user_id}')
+    if (user['id'] == user_sql['user_id']) and (user['username'] != user_sql['username']):
+        if user_sql['username'] in user['previous_usernames']:
+                execute(f'update 840MT.users set username="{user["username"]}" where user_id={user["id"]}')
     
-    if user_api['cover_url'] != user_sql['cover_url']:
-        execute(f'update 840MT.users set cover_url="{user_api["cover_url"]}" where user_id={user_id}')
+    if user['cover_url'] != user_sql['cover_url']:
+        execute(f'update 840MT.users set cover_url="{user["cover_url"]}" where user_id={user["id"]}')
     
-    if (user_api['country']['code'] != user_sql['country_code']) or (user_api['country']['name'] != user_sql['country_name']):
-        execute(f'update 840MT.users set country_code="{user_api["country"]["code"]}",country_name="{user_api["country"]["name"]}" where user_id={user_id}')
+    if (user['country']['code'] != user_sql['country_code']) or (user['country']['name'] != user_sql['country_name']):
+        execute(f'update 840MT.users set country_code="{user["country"]["code"]}",country_name="{user["country"]["name"]}" where user_id={user["id"]}')
     
-    return get_user(user_id)
+    return get_user(user["id"])
 
 def import_user(user):
     if user.get('id') in get_all_users('id'):
