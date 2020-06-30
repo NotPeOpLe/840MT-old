@@ -214,7 +214,9 @@ def check_score(user_id, score, sql_scores):
         return False
     if int(score['beatmap_id']) not in get_beatmaps_list():
         return False
-    if score['date'] < '2020-05-03 00:00:00':
+    if score['date'] < '2020-07-01 00:00:00':
+        return False
+    if score['date'] > '2020-09-08 23:59:59':
         return False
     if mods.mods.ScoreV2 not in mods.mods(int(score['enabled_mods'])):
         return False
