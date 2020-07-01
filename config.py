@@ -16,5 +16,3 @@ else:
 SQLuser = "mt"
 SQLpw = "Wr9FmDw4"
 SQLdb = "840MT"
-user = "_CHIMERA"
-password = "ntn13579"
