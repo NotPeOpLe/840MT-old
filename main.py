@@ -81,7 +81,7 @@ def bad():
 
 @app.route('/ranking')
 def ranking():
-    week = sql.now_week
+    week = None
     ranking_type = request.args.get('type')
 
     if ranking_type not in ['score', 'ar']:

@@ -6,7 +6,7 @@
         
         <div class="text-center">
             <h1>排行榜</h1>
-            <p>目前比賽為第{{now_week[2]}}周，您目前看的是第{{week[2]}}周的排行榜</p>
+            {% if week %}<p>目前比賽為第{{now_week[2]}}周，您目前看的是第{{week[2]}}周的排行榜</p>{% endif %}
             <a href="?type={{type}}&week={{now_week[2]}}" role="button" class="btn btn-secondary btn-sm">本周排行</a>
             <div class="btn-group" role="group" aria-label="week">
                 <a href="?type={{type}}&week=1" role="button" class="btn btn-secondary btn-sm {% if week[2]==1 %}active{% endif %}">1</a>
