@@ -10,6 +10,8 @@ import time
 import os
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True      
+app.jinja_env.auto_reload = True
 app.secret_key  = os.urandom(16)
 app.register_blueprint(LocalAPI,url_prefix='/api')
 
