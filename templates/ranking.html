@@ -37,7 +37,7 @@
                     <th class="text-center">SS</th>
                     <th class="text-center">S</th>
                     <th class="text-center">A</th>
-                    {% if week %}
+                    {% if not week %}
                     <th class="text-center">第一個上傳成績次數</th>
                     <th class="text-center">第一名</th>
                     {% endif %}
@@ -56,7 +56,7 @@
                     <td class="text-center">{{ rank['SS'] | integer }}</td>
                     <td class="text-center">{{ rank['S'] | integer }}</td>
                     <td class="text-center">{{ rank['A'] | integer }}</td>
-                    {% if week %}
+                    {% if not week %}
                     <td class="text-center">{{ rank['first_submit_maps'] | integer }}</td>
                     <td class="text-center">{{ rank['no1count'] | integer }}</td>
                     {% endif %}
