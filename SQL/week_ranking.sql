@@ -3,14 +3,14 @@ WITH ranking_scores AS (
 	FROM scores AS s
 	INNER JOIN (SELECT user_id, beatmap_id, MAX(score) AS maxscore FROM scores GROUP BY beatmap_id, user_id) AS m 
 	ON (s.user_id = m.user_id AND s.beatmap_id = m.beatmap_id AND s.score = m.maxscore)
-    WHERE s.date >= '2020-07-01' AND s.date <= '2020-07-09'
+    WHERE s.date >= {0} AND s.date <= {1}
 ),
 bast_accs AS (
 	SELECT s.user_id, SUM(s.accuracy) / (SELECT beatmaps FROM count) AS accuracy
 	FROM scores AS s
 	INNER JOIN (SELECT user_id, beatmap_id, MAX(accuracy) AS maxacc FROM scores GROUP BY beatmap_id, user_id) AS m 
 	ON (s.user_id = m.user_id AND s.beatmap_id = m.beatmap_id AND s.accuracy = m.maxacc)
-    WHERE s.date >= '2020-07-01' AND s.date <= '2020-07-09'
+    WHERE s.date >= {0} AND s.date <= {1}
     GROUP BY s.user_id
 ),
 rank_count AS (
@@ -37,7 +37,7 @@ FROM scores AS s
 INNER JOIN users AS u ON u.user_id = s.user_id
 INNER JOIN rank_count AS r ON r.user_id = s.user_id
 INNER JOIN bast_accs AS a ON a.user_id = s.user_id
-WHERE s.date >= '2020-07-01' AND s.date <= '2020-07-09'
+WHERE s.date >= {0} AND s.date <= {1}
 GROUP BY s.user_id
 )
 SELECT rank() OVER (ORDER BY {2} desc) AS 'rank', week_ranking.* FROM week_ranking
