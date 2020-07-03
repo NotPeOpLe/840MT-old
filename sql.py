@@ -101,21 +101,21 @@ def get_all_users(req=None):
         return sql_execute("SELECT user_id, username FROM users order by username")
 
 def get_user(user_id: int):
-    user = sql_execute(f"SELECT * FROM users WHERE user_id={0}".format(user_id),fetchone=True)
+    user = sql_execute("SELECT * FROM users WHERE user_id={0}".format(user_id),fetchone=True)
     if user == None:
         return None
-    p = sql_execute(f"with a as (select distinct beatmap_id from scores where user_id = {0} order by beatmap_id) select (select count(*) from a) as 'played_maps'".format(user_id),fetchone=True)
+    p = sql_execute("with a as (select distinct beatmap_id from scores where user_id = {0} order by beatmap_id) select (select count(*) from a) as 'played_maps'".format(user_id),fetchone=True)
     user['played_maps'] = p['played_maps']
     return user
 
 def get_userid(username: str): 
-    user = sql_execute(f"SELECT * FROM users WHERE username='{0}'".format(username),fetchone=True)
+    user = sql_execute("SELECT * FROM users WHERE username='{0}'".format(username),fetchone=True)
     if user == None:
         return None
     return user['user_id']
 
 def get_scores(user_id: int):
-    scores = sql_execute(f"SELECT * FROM scores WHERE user_id={0} ORDER BY date DESC LIMIT 50".format(user_id))
+    scores = sql_execute("SELECT * FROM scores WHERE user_id={0} ORDER BY date DESC LIMIT 50".format(user_id))
     for d in scores:
         d['enabled_mods'] = mods.formatMods(d['enabled_mods'])
     return scores
@@ -179,7 +179,7 @@ def get_myfirst(user_id: int):
     return scores
 
 def get_beatmap_ranking(map_id: int):
-    ranking = sql_execute(f"SELECT RANK() OVER(ORDER BY S.score DESC) as `ranking`, s.*, u.username, u.country_code as 'country' FROM scores AS s inner join users as u on u.user_id=s.user_id WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={0}) GROUP BY u.user_id ORDER BY S.score DESC".format(map_id))
+    ranking = sql_execute("SELECT RANK() OVER(ORDER BY S.score DESC) as `ranking`, s.*, u.username, u.country_code as 'country' FROM scores AS s inner join users as u on u.user_id=s.user_id WHERE S.score=(SELECT MAX(S.score) FROM scores AS S WHERE U.user_id=S.user_id AND S.beatmap_id={0}) GROUP BY u.user_id ORDER BY S.score DESC".format(map_id))
     
     for r in ranking:
         r['enabled_mods'] = mods.formatMods(r['enabled_mods'])
