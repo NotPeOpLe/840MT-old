@@ -136,10 +136,6 @@ def maps():
 
 @app.route('/maps/<int:mapid>')
 def beatmap(mapid):
-    if session:
-        print('%s有登入' % session['username'])
-    else:
-        print('沒登入')
     beatmap = sql.get_beatmap(mapid)
     mapset = sql.get_beatmapset(beatmap['beatmapset_id'])
     beatmap_ranking = sql.get_beatmap_ranking(mapid)
