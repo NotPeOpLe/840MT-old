@@ -102,7 +102,7 @@ def get_all_users(req=None):
 
 def get_user(user_id: int):
     user = sql_execute(f"SELECT * FROM users WHERE user_id={user_id}",fetchone=True)
-    if user == ():
+    if user == None:
         return None
     p = sql_execute(f"with a as (select distinct beatmap_id from scores where user_id = {user_id} order by beatmap_id) select (select count(*) from a) as 'played_maps'",fetchone=True)
     user['played_maps'] = p['played_maps']
@@ -110,7 +110,7 @@ def get_user(user_id: int):
 
 def get_userid(username: str): 
     user = sql_execute(f"SELECT * FROM users WHERE username='{username}'",fetchone=True)
-    if user == ():
+    if user == None:
         return None
     return user['user_id']
 

@@ -57,7 +57,7 @@
 					<td class="text-center rank-badge"><img src="{{ url_for('static',filename='images/badges/score-ranks/') }}{{ data['rank'] }}.svg"></td>
 					<td class="text-left">{{data['score'] | integer}}</td>
 					<td class="text-left">{{data['accuracy'] | acc}}</td>
-					<td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ data['country'] }}.png" width=24><a href="/users/{{ data['user_id'] }}/"> {{ data['username'] }}<a></td>
+					<td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ data['country'] }}.png" width=24><a href="/users/{{data['user_id']}}/"> {{ data['username'] }}<a></td>
 					<td class="text-left">{{data['maxcombo']| integer}}x</td>
 					<td class="text-left">{{data['count300']| integer}}</td>
 					<td class="text-left">{{data['count100']| integer}}</td>

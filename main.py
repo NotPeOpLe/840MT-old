@@ -113,18 +113,18 @@ def players():
 
 @app.route('/users/<user>/')
 def profile(user):
+    if session:
+        print(session['username'],end=" - ")
     try:
         user_id = int(user)
     except ValueError:
         user_id = sql.get_userid(user)
+        if user_id == None:
+            abort(404)
     
     User = sql.get_user(user_id)
     if User == None:
-        try:
-            user_id = sql.get_userid(user)
-            return redirect(url_for('profile', user = user_id))
-        except:
-            abort(404)
+        abort(404)
 
     scores = sql.get_scores(user_id)
     myfirst = sql.get_myfirst(user_id)
@@ -136,6 +136,8 @@ def maps():
 
 @app.route('/maps/<int:mapid>')
 def beatmap(mapid):
+    if session:
+        print(session['username'],end=" - ")
     beatmap = sql.get_beatmap(mapid)
     mapset = sql.get_beatmapset(beatmap['beatmapset_id'])
     beatmap_ranking = sql.get_beatmap_ranking(mapid)
