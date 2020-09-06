@@ -102,7 +102,7 @@ def ranking():
     my_rank = None
     if session:
         for rank in ranking:
-            if rank['user_id'] == session['user_id']:
+            if rank['USER_ID'] == session['user_id']:
                 my_rank = rank
                 break
     return render_template('ranking.html', ranking=ranking, my_rank=my_rank, type=ranking_type, week=week, now_week=sql.now_week)
