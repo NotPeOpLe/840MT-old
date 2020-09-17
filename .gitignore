@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
@@ -9,6 +10,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+flask_session/
 develop-eggs/
 dist/
 downloads/
@@ -123,14 +125,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-config.py
-map.txt
-data.db
 .vscode/settings.json
 tempCodeRunnerFile.py
-data.db
-840.gg.pem
-840.gg.key
-840.gg.crt
-sql/beatmap_ranking.sql
-sql/beatmap_ranking2.sql
+osuToken

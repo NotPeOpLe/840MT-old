@@ -1928,6 +1928,7 @@ pre code {
   padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #dee2e6;
+  white-space: nowrap;
 }
 
 .table thead th {
@@ -13345,6 +13346,8 @@ a:focus {
 .avatar {
   opacity: 0.7;
   transition: 0.2s;
+  width: 128px;
+  height: 128px;
 }
 
 .avatar:hover,
@@ -13358,4 +13361,9 @@ a:focus {
 
 td img {
   margin-bottom: 3px;
+}
+
+.rank-badge {
+    width: 32px;
+    height: 16px;
 }

@@ -3,11 +3,33 @@
 {% block content %}
 <section class="ftco-section">
     <div class="container table-responsive-sm">
-        <table class="table table-sm table-responsive-md table-striped table-hover h6 container">
+        
+        <div class="text-center">
+            <h1>排行榜</h1>
+            {% if week %}<p>目前比賽為第{{now_week[2]}}周，您目前看的是第{{week[2]}}周的排行榜</p>{% endif %}
+            <a href="?type={{type}}&week={{now_week[2]}}" role="button" class="btn btn-secondary btn-sm">本周排行</a>
+            <div class="btn-group" role="group" aria-label="week">
+                <a href="?type={{type}}&week=1" role="button" class="btn btn-secondary btn-sm {% if week[2]==1 %}active{% endif %}">1</a>
+                <a href="?type={{type}}&week=2" role="button" class="btn btn-secondary btn-sm {% if week[2]==2 %}active{% endif %}">2</a>
+                <a href="?type={{type}}&week=3" role="button" class="btn btn-secondary btn-sm {% if week[2]==3 %}active{% endif %}">3</a>
+                <a href="?type={{type}}&week=4" role="button" class="btn btn-secondary btn-sm {% if week[2]==4 %}active{% endif %}">4</a>
+                <a href="?type={{type}}&week=5" role="button" class="btn btn-secondary btn-sm {% if week[2]==5 %}active{% endif %}">5</a>
+                <a href="?type={{type}}&week=6" role="button" class="btn btn-secondary btn-sm {% if week[2]==6 %}active{% endif %}">6</a>
+                <a href="?type={{type}}&week=7" role="button" class="btn btn-secondary btn-sm {% if week[2]==7 %}active{% endif %}">7</a>
+                <a href="?type={{type}}&week=8" role="button" class="btn btn-secondary btn-sm {% if week[2]==8 %}active{% endif %}">8</a>
+                <a href="?type={{type}}&week=9" role="button" class="btn btn-secondary btn-sm {% if week[2]==9 %}active{% endif %}">9</a>
+                <a href="?type={{type}}&week=10" role="button" class="btn btn-secondary btn-sm {% if week[2]==10 %}active{% endif %}">10</a>
+            </div>
+            {% if week %}<a href="?type={{type}}" role="button" class="btn btn-secondary btn-sm">回到總排行</a>{% endif %}<br>
+            <a href="?type=score{% if week %}&week={{week[2]}}{% endif %}" class="btn btn-light {% if type=='score' %}active{% endif %}">分數</a><a href="?type=ar{% if week %}&week={{week[2]}}{% endif %}" class="btn btn-light {% if type=='ar' %}active{% endif %}">達成率</a>
+            <p>{% if my_rank %}你的排名目前在第 {{ my_rank['RANK'] }} 名{% endif %}</p>
+        </div>
+        <table class="table table-sm table-responsive-md table-striped table-hover h6">
             <thead class="thead-light">
                 <tr>
                     <th class="text-center">#</th>
                     <th class="text-left">玩家</th>
+                    <th class="text-center">達成率</th>
                     <th class="text-center">準確率</th>
                     <th class="text-center">遊戲次數</th>
                     <th class="text-center">總分</th>
@@ -15,20 +37,29 @@
                     <th class="text-center">SS</th>
                     <th class="text-center">S</th>
                     <th class="text-center">A</th>
+                    {% if not week %}
+                    <th class="text-center">第一個上傳成績次數</th>
+                    <th class="text-center">第一名</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for rank in ranking %}
                 <tr>
-                    <td class="text-center">{{ rank['rank'] }}</td>
-                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['country'] }}.png" width=24><a href="/players/{{ rank['user_id'] }}/"> {{ rank['username'] }}<a></td>
-                    <td class="text-center">{{ rank['accuracy'] | acc }}</td>
-                    <td class="text-center">{{ rank['play_count'] | integer }}</td>
-                    <td class="text-center">{{ rank['total_score'] | integer }}</td>
-                    <td class="text-center">{{ rank['rank_score'] | integer }}</td>
+                    <td class="text-center">{{ rank['RANK'] }}</td>
+                    <td class="text-left"><img src="{{ url_for('static',filename='images/flags/') }}{{ rank['COUNTRY_CODE'] }}.png" width=24><a href="/users/{{ rank['USER_ID'] }}/"> {{ rank['USERNAME'] }}</a></td>
+                    <td class="text-center">{{ rank['ACHIEVEMENT_RATE'] | acc }}</td>
+                    <td class="text-center">{{ rank['ACCURACY'] | acc }}</td>
+                    <td class="text-center">{{ rank['PLAY_COUNT'] | integer }}</td>
+                    <td class="text-center">{{ rank['TOTAL_SCORE'] | integer }}</td>
+                    <td class="text-center">{{ rank['RANKING_SCORE'] | integer }}</td>
                     <td class="text-center">{{ rank['SS'] | integer }}</td>
                     <td class="text-center">{{ rank['S'] | integer }}</td>
                     <td class="text-center">{{ rank['A'] | integer }}</td>
+                    {% if not week %}
+                    <td class="text-center">{{ rank['FIRST_SUBMIT_MAPS'] | integer }}</td>
+                    <td class="text-center">{{ rank['NO1_COINT'] | integer }}</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

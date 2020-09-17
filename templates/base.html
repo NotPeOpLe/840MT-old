@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/flaticon.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/icomoon.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <script src="{{url_for('static', filename='js/time.js')}}"></script>
     {% endblock %}
 </head>
 <body>
@@ -39,20 +40,26 @@
                 </button>
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a href="/rule" class="nav-link d-flex align-items-center"></i>遊戲規則</a></li>
+                        <li class="nav-item"><a href="/maps/" class="nav-link d-flex align-items-center"></i>圖池</a></li>
+                        <li class="nav-item"><a href="/players" class="nav-link d-flex align-items-center"></i>參賽名單</a></li>
+                        <li class="nav-item"><a href="/ranking?type=score" class="nav-link d-flex align-items-center"></i>排行榜</a></li>
+                        <li class="nav-item"><a href="/register" class="nav-link d-flex align-items-center"></i>參加比賽!</a></li>
+                        <li class="nav-item"><a href="https://discord.gg/PZHeTbp" class="nav-link d-flex align-items-center"></i>Discord</a></li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        {% if session %}
                         <li class="dropdown nav-item">
-                    <a href="#" class="dropdown-toggle nav-link icon d-flex align-items-center" data-toggle="dropdown">
-                        Components
-                        <b class="caret"></b>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-left">
-                        <a href="#" class="dropdown-item"> All Components</a>
-                        <a href="/test" class="dropdown-item"> test</a>
-                    </div>
-                    </li>
-                    <li class="nav-item"><a href="/maps/" class="nav-link icon d-flex align-items-center"></i>圖池</a></li>
-                    <li class="nav-item"><a href="/players/" class="nav-link icon d-flex align-items-center"></i>參賽名單</a></li>
-                    <li class="nav-item"><a href="/ranking/" class="nav-link icon d-flex align-items-center"></i>排行榜</a></li>
-                    <li class="nav-item"><a href="/register" class="nav-link icon d-flex align-items-center"></i>參加測試!</a></li>
+                        <a href="#" class="dropdown-toggle nav-link d-flex align-items-center" data-toggle="dropdown">你好,{{ session['username']}}!<b class="caret"></b></a>
+                        <div class="dropdown-menu dropdown-menu-left">
+                            <a href="https://osu.ppy.sh/users/{{ session['user_id'] }}/osu" class="dropdown-item"> osu!官網個人頁面</a>
+                            <a href="/logout" class="dropdown-item"> 登出</a>
+                        </div>
+                        </li>
+                        <li class="nav-item"><a href="/users/{{ session['user_id'] }}/"><img src="https://a.ppy.sh/{{ session['user_id'] }}" class="rounded-circle img-fluid image nav-link d-flex align-items-center" style="width:50px;"></img></a></li>
+                        {% else %}
+                        <li class="nav-item"><a href="/login" class="nav-link d-flex align-items-center">登入</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 </div>
@@ -70,7 +77,7 @@
                     Copyright &copy;<script>
                     document.write(new Date().getFullYear());
 
-                    </script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    </script> All rights reserved | This template is made with <i class="-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                 </p>
             </div>
@@ -94,10 +101,11 @@
     <script src="{{url_for('static', filename='js/moment-with-locales.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/bootstrap-datetimepicker.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/main.js')}}"></script>
-
     <script>
         $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
     </script>
+    {% block script %}
+    {% endblock script %}
 </body>

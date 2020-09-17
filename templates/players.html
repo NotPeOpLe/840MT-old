@@ -5,12 +5,12 @@
     <div class="container">
         <h1 class="text-center">參賽名單</h1>
         <p class="text-center">總計 {{users|count}} 位玩家</p>
-        <div class="row container">
+        <div class="row">
             {% for user in users %}
-            <a href="/players/{{user[0]}}/">
+            <a href="/users/{{user['user_id']}}/">
             <div class="card block text-center">
-                <img src="https://a.ppy.sh/{{user[0]}}" class="card-img-top avatar">
-                <div class="card-body" style="padding: 5px;"><h6 class="card-text">{{user[1]}}</h6></div>
+                <img src="https://a.ppy.sh/{{user['user_id']}}" class="card-img-top avatar">
+                <div class="card-body" style="padding: 5px;"><h6 class="card-text text-truncate">{{user['username']}}</h6></div>
             </div>
             </a>
             {% endfor %}

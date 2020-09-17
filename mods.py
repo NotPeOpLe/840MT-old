@@ -39,4 +39,8 @@ class mods(Flag):
 
 def formatMods(mod):
     modf = str(mods(mod))[5:].split('|')
+    if 'ScoreV2' in modf:
+        modf.remove('ScoreV2')
+    if 'NoMod' in modf:
+        modf.remove('NoMod')
     return modf

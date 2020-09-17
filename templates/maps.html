@@ -4,7 +4,7 @@
 <section class="ftco-section">
     <div class="container">
         <h1 class="text-center">圖池</h1>
-        <p class="text-center">總共有 {{c[0]}} 張圖，讓你打好打滿，吃不完兜著走!</p>
+        <p class="text-center">總共有 {{c['beatmaps']}} 張圖，讓你打好打滿，吃不完兜著走!</p>
         <div class="row">
             {% for map in maps %}
             <div class="col-sm-6" style="padding-top: 10px; padding-bottom: 10px;">
@@ -14,7 +14,7 @@
                     <h5 class="card-title">{{map['artist']}} - {{map['title']}}</h5>
                     <p class="card-text">作圖者: {{map['creator']}} | {{map['count_map']}} 個難度</p>
                     <div class="text-right">
-                    <a href="/maps/{{map['maindiff_id']}}" class="card-link">圖譜排行榜</a>
+                    <a href="/maps/{{map['beatmap_id']}}" class="card-link">圖譜排行榜</a>
                     <a href="https://osu.ppy.sh/beatmapsets/{{map['beatmapset_id']}}" class="card-link" target="_blank">官網連結</a>
                     <a href="https://osu.ppy.sh/d/{{map['beatmapset_id']}}" class="card-link" target="_blank">下載圖譜</a></div>
                     </div>
