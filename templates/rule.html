@@ -22,33 +22,33 @@
         <p>比賽時間為UTC時間 7/1 00:00 ~ 9/8 23:59</p>
         <h2>獎勵</h2>
         <ul>
-            <li>Ranked總分第一名: 4個月supporter</li>
-            <li>Ranked總分第二名: 2個月supporter</li>
-            <li>Ranked總分第三名: 1個月supporter</li>
+            <li>Ranked總分第一名: 4個月supporter <a id="r1"></a></li>
+            <li>Ranked總分第二名: 2個月supporter <a id="r2"></a></li>
+            <li>Ranked總分第三名: 1個月supporter <a id="r3"></a></li>
         </ul>
         <ul>
-            <li>達成率第一名: 4個月supporter</li>
-            <li>達成率第二名: 2個月supporter</li>
-            <li>達成率第三名: 1個月supporter</li>
+            <li>達成率第一名: 4個月supporter <a id="r4"></a></li>
+            <li>達成率第二名: 2個月supporter <a id="r5"></a></li>
+            <li>達成率第三名: 1個月supporter <a id="r6"></a></li>
         </ul>
         <ul>
-            <li>每周排名連續第一名最高者: 4個月supporter</li>
+            <li>每周排名連續第一名最高者: 4個月supporter <a id="r7"></a></li>
         </ul>
         
         <ul>
             <h5>額外成就獎勵:</h5>
             <ul>
-                <li>總分數最高者: 1個月supporter (一位)</li>
-                <li>在圖池中第一個上傳成績最多的: 2個月supporter (一位)</li>
-                <li>最多第一名的人: 4個月supporter (一位)</li>
-                <li>達成率100%的人: 12個月supporter + 840.gg(Gsuite Business)帳號 (無上限)</li>
+                <li>總分數最高者: 1個月supporter (一位) <a id="r8"></a></li>
+                <li>在圖池中第一個上傳成績最多的: 2個月supporter (一位) <a id="r9"></a></li>
+                <li>最多第一名的人: 4個月supporter (一位) <a id="r10"></a></li>
+                <li>達成率100%的人: 12個月supporter + 840.gg(Gsuite Business)帳號 (無上限) <a id="r11"></a></li>
             </ul>
         </ul>
         <ul>
             <h5>參加獎:</h5>
             <ul>
-                <li>分數>1,000,000分 遊玩次數最多者: 2個月supporter (一位)</li>
-                <li>打完全部圖的玩家的人且所有圖要評價C以上: 1個月supporter (無上限)</li>
+                <li>分數>1,000,000分 遊玩次數最多者: 2個月supporter (一位) <a id="r12"></a></li>
+                <li>打完全部圖的玩家的人且所有圖要評價C以上: 1個月supporter (無上限) <a id="r13"></a></li>
             </ul>
         </ul>
         <p class="text-white">我怎麼送那麼多獎勵= =</p>
@@ -62,3 +62,23 @@
     </div>
 </section>
 {% endblock %}
+
+{% block script %}
+<script>
+$.get('prize_list', function(r){
+    $('#r1').text(r.r1)
+    $('#r2').text(r.r2)
+    $('#r3').text(r.r3)
+    $('#r4').text(r.r4)
+    $('#r5').text(r.r5)
+    $('#r6').text(r.r6)
+    $('#r7').text(r.r7)
+    $('#r8').text(r.r8)
+    $('#r9').text(r.r9)
+    $('#r10').text(r.r10)
+    $('#r11').text(r.r11)
+    $('#r12').text(r.r12)
+    $('#r13').text(r.r13)
+})
+</script>
+{% endblock script %}
