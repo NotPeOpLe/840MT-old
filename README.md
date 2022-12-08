@@ -5,6 +5,7 @@
 - Python 3.7.5 以上
 - flask
 - requsets
+- MySQL 8.0 以上
 
 # TO-DO
 - [x] 玩家頁面
