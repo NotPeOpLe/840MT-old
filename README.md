@@ -55,3 +55,9 @@
         ranking.html        排名View
         rule.html           規則View
 ```
+
+# 資料庫
+
+我把 MySQL 資料轉成 google sheet 了
+
+https://docs.google.com/spreadsheets/d/10DOO86jtqfWi7cC2ivFbb6PbY6_HxhQH2YJwoqJEuqk/edit#gid=361833722
