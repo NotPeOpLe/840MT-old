@@ -1,18 +1,18 @@
 debug = False
 
-API_KEY = "5db5e854ef2a1b529fdde75e9a7110b02e210ddf"
+API_KEY = "727WYSI"
 
 if debug:
-    CLIENT_ID = 1236
-    CLIENT_SECRET = "slO05Frhyh5fi4tqBLTsjNq9y7y510435Xmb3ozk"
-    REDIRECT_URL = "http://127.0.0.1/callback"
-    SQLserver = "840MT.ddns.net"
+    CLIENT_ID = 727
+    CLIENT_SECRET = "727WYSI"
+    REDIRECT_URL = "http://727.WYSI/callback"
+    SQLserver = "727.WYSI"
 else:
-    CLIENT_ID = 647
-    CLIENT_SECRET = "DRAgvrg7F3rRlaKc26BHGaRbyR5r5R372cIAchNF"
-    REDIRECT_URL = "https://mt.840.gg/callback"
-    SQLserver = "840MT.ddns.net"
+    CLIENT_ID = 727
+    CLIENT_SECRET = "727WYSI"
+    REDIRECT_URL = "https://727.WYSI/callback"
+    SQLserver = "727WYSI"
 
-SQLuser = "mt"
-SQLpw = "Wr9FmDw4"
+SQLuser = "727"
+SQLpw = "727"
 SQLdb = "840MT"
